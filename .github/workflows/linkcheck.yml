@@ -8,9 +8,37 @@ on:
 jobs:
   linkcheck:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/sosiristseng/docker-jupyterbook:latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Check Links
-        run: jupyter-book build docs/ --builder linkcheck
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: '**/requirements.txt'
+      - name: Install Python dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f .ci/requirements.txt ]; then pip install -r .ci/requirements.txt; fi
+      - name: Setup Julia ${{ env.JULIA_VERSION }}
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ env.JULIA_VERSION }}
+      - name: Cache Julia
+        uses: actions/cache@v3
+        with:
+          path: ~/.julia
+          key: ${{ runner.os }}-julia-${{ env.JULIA_VERSION }}-${{ hashFiles('Project.toml') }}-${{ hashFiles('Manifest.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-julia-${{ env.JULIA_VERSION }}-${{ hashFiles('Project.toml') }}-
+            ${{ runner.os }}-julia-${{ env.JULIA_VERSION }}-
+      - name: Install Julia dependencies
+        run: |
+          julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia")'
+          julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
+      - name: Cache JupyterBook
+        uses: actions/cache@v3
+        with:
+          path: _build/.jupyter_cache/
+          key: ${{ runner.os }}-jb-${{ hashFiles('Manifest.toml') }}
