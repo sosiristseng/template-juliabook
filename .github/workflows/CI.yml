@@ -45,7 +45,7 @@ jobs:
             ${{ runner.os }}-julia-${{ env.JULIA_VERSION }}-
       - name: Install Julia dependencies
         run: |
-          julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia")'
+          julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
       - name: Cache JupyterBook
         uses: actions/cache@v3
