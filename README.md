@@ -7,6 +7,17 @@
 
 [Jupyter book](https://jupyterbook.org/index.html) creates a beautiful website from Markdown and Jupyter Notebook files.
 
+## For GitHub
+
+Click `Use this template` green button to copy this repository to your place.
+
+Open your repository settings => Pages => GitHub Pages
+=> Build and deployment => Source, Select `GitHub actions`
+
+## For Gitlab
+
+New -> New project -> import project -> repo by URL.
+
 ## CI/CD
 
 GitHub actions and GitLab CI/CD are setup to build and publish the website whenever changes are committed.

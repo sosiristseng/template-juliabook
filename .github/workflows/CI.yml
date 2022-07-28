@@ -54,11 +54,23 @@ jobs:
           key: ${{ runner.os }}-jb-${{ hashFiles('Manifest.toml') }}
       - name: Build website
         run: jupyter-book build docs/ -v --warningiserror --keep-going
-      - name: Deploy Website
-        uses: peaceiris/actions-gh-pages@v3.8.0
-        if: github.ref == 'refs/heads/main'
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          force_orphan: true
-          publish_dir: docs/_build/html
-          full_commit_message: ${{ github.event.head_commit.message }}
+          path: ./docs/_build/html
+
+  # Deployment job
+  deploy:
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
