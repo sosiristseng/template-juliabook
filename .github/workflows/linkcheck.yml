@@ -1,0 +1,41 @@
+name: Check markdown links
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *' # Every month
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - '.github/workflows/linkcheck.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linkcheck:
+    env:
+      DIR: 'docs'
+      PY_VER: '3.12'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PY_VER }}
+      - name: Cache pip
+        uses: actions/cache@v3
+        id: cache-pip
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+      - name: Install python packages
+        if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
+        run: pip install -r requirements.txt
+      - name: Build website
+        run: jupyter-book build ${DIR} --builder linkcheck
