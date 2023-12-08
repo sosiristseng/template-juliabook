@@ -76,12 +76,13 @@ jobs:
         key: ${{ steps.cache-julia.outputs.cache-primary-key }}
     - name: Install IJulia kernel
       run: julia --color=yes -e 'using IJulia; installkernel("Julia", "--project=@.")'
-    - name: Execute Notebook
+    - name: Execute Notebooks
       run: >
+        find docs -type f -name '*.ipynb' |
         parallel --joblog /tmp/log -j${NJOBS} jupyter nbconvert --to notebook --execute --inplace ${{ env.EXTRA_ARGS }}
         --ExecutePreprocessor.timeout=${{ env.TIMEOUT }}
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
-        {} ::: docs/*.ipynb
+        {}
     - name: Show execution stats
       run: cat /tmp/log
     - name: Build website
