@@ -1,4 +1,4 @@
-name: CI with dynamic parallel matrix
+name: CI with GNU parallel
 
 on:
   workflow_dispatch:
