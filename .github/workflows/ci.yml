@@ -61,10 +61,16 @@ jobs:
           ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-
     - name: Install Julia packages
       if: ${{ steps.cache-julia.outputs.cache-hit != 'true' }}
+      shell: julia --color=yes {0}
       run: |
-        julia --project=@. --color=yes -e 'using Pkg, Dates; Pkg.instantiate(); Pkg.precompile(); Pkg.gc(collect_delay=Day(0))'
+        using Pkg, Dates
+        Pkg.add(["IJulia"])
+        Pkg.activate(".")
+        Pkg.instantiate()
+        Pkg.precompile()
+        Pkg.gc(collect_delay=Day(0))
     - name: Install IJulia kernel
-      run: julia --project=@. --color=yes -e 'using IJulia; installkernel("Julia", "--project=@.")'
+      run: julia --color=yes -e 'using IJulia; installkernel("Julia", "--project=@.")'
     - name: Execute Notebooks
       run: >
         find docs -type f -name '*.ipynb' |
