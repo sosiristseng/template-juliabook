@@ -17,6 +17,7 @@ env:
   CACHE_NUM: '1'
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CI: 'true'
+  NBPATH: '/tmp/nb'
 
 jobs:
   CI:
@@ -38,6 +39,14 @@ jobs:
     - name: Install pip dependencies if cache miss
       if: ${{ steps.cache-py.outputs.cache-hit != 'true' }}
       run: pip install -r requirements.txt
+    - name: Cache execute notebooks
+      uses: actions/cache@v4
+      id: cache-nb
+      with:
+        path: ${{ env.NBPATH }}
+        key: ${{ runner.os }}-nb-${{ env.CACHE_NUM }}-${{ hashFiles('src/**','Project.toml', 'Manifest.toml') }}-${{ hashFiles('docs/**/*.ipynb') }}
+        restore-keys: |
+          ${{ runner.os }}-nb-${{ env.CACHE_NUM }}-${{ hashFiles('src/**','Project.toml', 'Manifest.toml') }}-
     - name: Read Julia version
       uses: SebRollen/toml-action@v1.2.0
       id: read_toml
@@ -56,7 +65,7 @@ jobs:
         path: |
           ~/.julia
           !~/.julia/registries
-        key: ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-${{ hashFiles('src/**','Project.toml', 'Manifest.toml')}}
+        key: ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-${{ hashFiles('src/**','Project.toml', 'Manifest.toml') }}
         restore-keys: |
           ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-
     - name: Install Julia packages
