@@ -70,7 +70,7 @@ jobs:
         Pkg.precompile()
         Pkg.gc(collect_delay=Day(0))
     - name: Install IJulia kernel
-      run: julia --color=yes -e 'using IJulia; installkernel("Julia", "--project=@.")'
+      run: julia --color=yes -e 'using IJulia; installkernel("Julia", "--project=@.", "--heap-size-hint=3G")'
     - name: Execute Notebooks
       run: >
         find docs -type f -name '*.ipynb' |
