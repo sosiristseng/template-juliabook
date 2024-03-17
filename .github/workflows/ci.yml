@@ -13,7 +13,6 @@ concurrency:
 
 env:
   NJOBS: '4'
-  TIMEOUT: '-1'    # nbconvert timeout
   EXTRA_ARGS: ''   # Extra arguments for nbconvert
   CACHE_NUM: '1'
   JULIA_CONDAPKG_BACKEND: 'Null'
@@ -76,7 +75,7 @@ jobs:
       run: >
         find docs -type f -name '*.ipynb' |
         parallel --joblog /tmp/job.log -j${NJOBS} jupyter nbconvert --to notebook --execute --inplace ${{ env.EXTRA_ARGS }}
-        --ExecutePreprocessor.timeout=${{ env.TIMEOUT }}
+        --ExecutePreprocessor.timeout=-1
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
         {}
     - name: Show execution stats
