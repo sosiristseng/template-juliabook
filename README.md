@@ -1,15 +1,10 @@
-# Template for publishing Julia Jupyter notebooks with Jupyter Book
+# Template for publishing Julia Jupyter / Literate notebooks
 
 Click `Use this template` button to copy this repository.
 
-Related templates:
+See also:
 
-- [template-juliabook-parallel](https://github.com/ww-jl/template-juliabook-parallel) : GNU parallel runs notebooks concurrently and [jupyter-book][] builds the website.
 - [template-juliabook-matrix](https://github.com/ww-jl/template-juliabook-matrix) : Dynamic parallel matrix runs notebooks concurrently and [jupyter-book][] builds the website.
-- [template-quarto-julia](https://github.com/ww-jl/template-quarto-julia) : Dynamic parallel matrix runs notebooks concurrently and [quarto][] builds the website.
-- [template-mkdocs-literate](https://github.com/ww-jl/template-mkdocs-literate) : [Literate.jl][] runs notebooks concurrently and [mkdocs-material][] builds the website.
-- [template-juliabook-literate](https://github.com/ww-jl/template-juliabook-literate) : [Literate.jl][] runs notebooks concurrently and [jupyter-book][] builds the website.
-- [template-quarto-literate](https://github.com/ww-jl/template-quarto-literate) : [Literate.jl][] runs notebooks concurrently and [quarto][] builds the website.
 
 [quarto]: https://quarto.org
 [jupyter-book]: https://jupyterbook.org
@@ -18,7 +13,7 @@ Related templates:
 
 ## Notebook execution and publish via continuous integration (CI)
 
-In [ci.yml](.github/workflows/ci.yml), notebooks under the `docs` folder are executed in parallel, and then [Jupyter book][jupyter-book] creates a beautiful website from Markdown and Jupyter notebook files.
+In [ci.yml](.github/workflows/ci.yml), Jupyter (`*.ipynb`) and Literate (`*.jl`) notebooks under the `docs` folder are executed in parallel, and then [Jupyter book][jupyter-book] creates a beautiful website with notebook execution results.
 
 ## Enable GitHub pages
 
@@ -36,8 +31,8 @@ This repository also uses [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to 
 
 The Github workflow [update-manifest.yml](.github/workflows/update-manifest.yml) will regularly update Julia dependencies, make a PR with the updated packages, and automatically merge the updates if the notebooks are executed without error.
 
-See [the instructions](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs) for how to trigger CI workflows in a PR. My repo uses a custom [GitHub APP](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) to generate a token on the fly.
+See [the instructions](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs) for how to trigger CI workflows in a PR. This repo uses a custom [GitHub APP](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) to generate a token on the fly.
 
-## Checking HTTP links
+## Checking web links
 
 [linkcheck.yml](.github/workflows/linkcheck.yml) uses GitHub actions to regularly check if the web links in the notebooks are valid.
