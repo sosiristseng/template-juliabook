@@ -83,7 +83,7 @@ jobs:
         --execute ${{ env.EXTRA_ARGS }}
         --ExecutePreprocessor.timeout=-1
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
-        --output ${{ env.NBCACHE }}/{}
+        --output ${{ github.workspace }}/${{ env.NBCACHE }}/{}
         {}
     - name: Show execution stats
       run: cat /tmp/job.log
