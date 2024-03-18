@@ -60,7 +60,8 @@ end
 
 # Execute literate notebooks in worker process(es)
 ts = pmap(litnbs; on_error=ex->NaN) do nb
-    @elapsed Literate.notebook(nb, dirname(nb); mdstrings=true)
+    outdir = joinpath(cachedir, dirname(nb))
+    @elapsed Literate.notebook(nb, outdir; mdstrings=true)
 end
 
 pretty_table([litnbs ts], header=["Notebook", "Elapsed (s)"])
