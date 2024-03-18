@@ -73,19 +73,21 @@ jobs:
       run: |
         julia --color=yes -e 'using Pkg; Pkg.add(["IJulia"])'
         julia --color=yes --project=@. -e 'using Pkg, Dates; Pkg.instantiate(); Pkg.precompile(); Pkg.gc(collect_delay=Day(0))'
-    - name: Install IJulia kernel and prepare cache
-      run: |
-        julia --color=yes -e 'using IJulia; IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=3G")'
-        julia --color=yes caching.jl
+    - name: Install IJulia kernel
+      run: julia --color=yes -e 'using IJulia; IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=3G")'
     - name: Execute Notebooks
       run: >
-        find docs -type f -name '*.ipynb' |
-        parallel --joblog /tmp/job.log -j${NJOBS} jupyter nbconvert --to notebook --execute --inplace ${{ env.EXTRA_ARGS }}
+        julia --color=yes caching.jl |
+        parallel --joblog /tmp/job.log -j${NJOBS} jupyter nbconvert --to notebook
+        --execute ${{ env.EXTRA_ARGS }}
         --ExecutePreprocessor.timeout=-1
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
+        --output ${{ env.NBCACHE }}/{}
         {}
     - name: Show execution stats
       run: cat /tmp/job.log
+    - name: Copy back built notebooks
+      run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Build website
       run: jupyter-book build docs/
     - name: Upload pages artifact
