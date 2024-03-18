@@ -83,7 +83,6 @@ jobs:
           !~/.julia/registries
         key: ${{ steps.cache-julia.outputs.cache-primary-key }}
     - name: Install IJulia kernel and run literate notebooks
-      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       run: julia --color=yes -p ${{ env.LITERATE_PROC }} --heap-size-hint=4G literate.jl
     - name: Execute Jupyter notebooks
       run: >
