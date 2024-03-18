@@ -87,7 +87,7 @@ jobs:
       run: julia --color=yes -p ${{ env.LITERATE_PROC }} --heap-size-hint=4G literate.jl
     - name: Execute Jupyter notebooks
       run: >
-        parallel -a nbs.txt --joblog job.log -j ${{ env.NBCONVERT_JOBS }} jupyter nbconvert --to notebook
+        parallel -a ipynbs.txt --joblog job.log -j ${{ env.NBCONVERT_JOBS }} jupyter nbconvert --to notebook
         --execute ${{ env.EXTRA_ARGS }}
         --ExecutePreprocessor.timeout=-1
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
