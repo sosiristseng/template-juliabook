@@ -41,7 +41,9 @@ for (root, dirs, files) in walkdir(cachedir)
     end
 end
 
-# Print the list of notebooks to be executed
-for i in nbs
-    println(i)
+# Write the list of notebooks to be executed
+open(outfile, "w") do f
+    for i in nbs
+        println(f, i)
+    end
 end

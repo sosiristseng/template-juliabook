@@ -73,12 +73,13 @@ jobs:
       run: |
         julia --color=yes -e 'using Pkg; Pkg.add(["IJulia"])'
         julia --color=yes --project=@. -e 'using Pkg, Dates; Pkg.instantiate(); Pkg.precompile(); Pkg.gc(collect_delay=Day(0))'
-    - name: Install IJulia kernel
-      run: julia --color=yes -e 'using IJulia; IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=3G")'
+    - name: Install IJulia kernel and calculate cache
+      run: |
+        julia --color=yes -e 'using IJulia; IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=3G")'
+        julia --color=yes caching.jl
     - name: Execute Notebooks
       run: >
-        julia --color=yes caching.jl |
-        parallel --joblog /tmp/job.log -j${NJOBS} jupyter nbconvert --to notebook
+        parallel -a nbs.txt --joblog /tmp/job.log -j${NJOBS} jupyter nbconvert --to notebook
         --execute ${{ env.EXTRA_ARGS }}
         --ExecutePreprocessor.timeout=-1
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
