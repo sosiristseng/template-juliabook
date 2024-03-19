@@ -92,7 +92,7 @@ jobs:
         --ExecutePreprocessor.kernel_name=julia-1.$(julia -e 'print(VERSION.minor)')
         --output ${{ github.workspace }}/${{ env.NBCACHE }}/{}
         {}
-    - name: Show GUN parallel execution stats
+    - name: Show GNU parallel execution stats
       run: cat job.log
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
