@@ -1,4 +1,4 @@
-name: CI with GNU parallel
+name: CI
 
 on:
   workflow_dispatch:
