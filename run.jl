@@ -97,7 +97,7 @@ timeout = "--ExecutePreprocessor.timeout=" * get(ENV, "TIMEOUT", "-1")
 cmds = [`jupyter nbconvert --to notebook $(execute) $(timeout) $(kernelname) --output $(joinpath(abspath(pwd()), cachedir, nb)) $(nb)` for nb in ipynbs]
 
 # Run the nbconvert commands in parallel
-ts = asyncmap(run, cmds; ntasks) do cmd
+ts = asyncmap(cmds; ntasks) do cmd
     @elapsed run(cmd)
 end
 
