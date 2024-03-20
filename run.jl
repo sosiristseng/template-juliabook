@@ -102,4 +102,4 @@ ts = asyncmap(cmds; ntasks) do cmd
 end
 
 # Print execution result
-pretty_table([litnbs ts], header=["Notebook", "Elapsed (s)"])
+pretty_table([ipynbs ts], header=["Notebook", "Elapsed (s)"])
