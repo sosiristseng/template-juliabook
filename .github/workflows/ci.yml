@@ -51,7 +51,7 @@ jobs:
           ${{ runner.os }}-nb-${{ env.CACHE_NUM }}-${{ hashFiles('src/**', 'Project.toml', 'Manifest.toml') }}-
     - name: Read Julia version
       id: read_toml
-      run: echo "value=$(python getjlver.py)" >> "$GITHUB_OUTPUT"
+      run: echo "value=$(python -c 'import tomllib; from pathlib import Path; print(tomllib.loads(Path("Manifest.toml").read_text())["julia_version"])')" >> "$GITHUB_OUTPUT"
     - name: Setup Julia
       uses: julia-actions/setup-julia@v1
       with:
