@@ -13,7 +13,7 @@ concurrency:
 
 env:
   NBCONVERT_JOBS: '4'
-  LITERATE_PROC: '2'
+  LITERATE_PROC: '3'
   ALLOWERRORS: 'false'
   CACHE_NUM: '1'
   JULIA_CONDAPKG_BACKEND: 'Null'
@@ -31,15 +31,22 @@ jobs:
       id: setup-python
       with:
         python-version: '3.x'
-    - name: Cache python
+    - name: Cache virtualenv
       uses: actions/cache@v4
-      id: cache-py
+      id: cache-venv
       with:
-        key: ${{ runner.os }}-py-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
-        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-venv-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
+        path: .venv
     - name: Install Python dependencies
-      if: ${{ steps.cache-py.outputs.cache-hit != 'true' }}
-      run: pip install -r requirements.txt
+      if: ${{ steps.cache-venv.outputs.cache-hit != 'true' }}
+      run: |
+        python -m venv --copies .venv
+        source .venv/bin/activate
+        python -m pip install -r requirements.txt
+    - name: Add venv to PATH
+      run: |
+        echo ".venv/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=.venv" >> $GITHUB_ENV
     - name: Cache executed notebooks
       uses: actions/cache@v4
       id: cache-nb
