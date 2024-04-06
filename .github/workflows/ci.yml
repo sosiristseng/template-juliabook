@@ -47,6 +47,8 @@ jobs:
       run: |
         echo ".venv/bin" >> $GITHUB_PATH
         echo "VIRTUAL_ENV=.venv" >> $GITHUB_ENV
+    - name: Where is Python
+      run: which python
     - name: Cache executed notebooks
       uses: actions/cache@v4
       id: cache-nb
