@@ -36,8 +36,10 @@ jobs:
       if: ${{ contains(runner.name, 'GitHub Actions') }}
       id: cache-py
       with:
-        key: ${{ runner.os }}-py-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
-        path: ${{ env.pythonLocation }}
+        key: ${{ runner.os }}-pip-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
+        path: |
+          ${{ env.pythonLocation }}/lib
+          ${{ env.pythonLocation }}/bin
     - name: Install Python dependencies
       if: ${{ !contains(runner.name, 'GitHub Actions') || steps.cache-py.outputs.cache-hit != 'true' }}
       run: pip install -r requirements.txt
