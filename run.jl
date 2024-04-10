@@ -9,7 +9,7 @@ using IJulia
     Pkg.activate(Base.current_project())
 end
 
-function main(; basedir = get(ENV, "DOCDIR", "docs"), cachedir = get(ENV, "NBCACHE", ".cache"), printtable=true)
+function main(; basedir=get(ENV, "DOCDIR", "docs"), cachedir=get(ENV, "NBCACHE", ".cache"), printtable=true)
     ipynbs = String[]
     litnbs = String[]
 
@@ -58,7 +58,7 @@ function main(; basedir = get(ENV, "DOCDIR", "docs"), cachedir = get(ENV, "NBCAC
     end
 
     # Execute literate notebooks in worker process(es)
-    ts_lit = pmap(litnbs; on_error=ex->NaN) do nb
+    ts_lit = pmap(litnbs; on_error=ex -> NaN) do nb
         outdir = joinpath(cachedir, dirname(nb))
         @elapsed Literate.notebook(nb, outdir; mdstrings=true)
     end
