@@ -5,7 +5,7 @@ using IJulia
 
 @everywhere begin
     ENV["GKSwstype"] = "100"
-    using Literate, Pkg
+    using Literate, Pkg, JSON
     Pkg.activate(Base.current_project())
 end
 
