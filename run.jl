@@ -10,7 +10,7 @@ using IJulia
 end
 
 # Strip SVG output from a Jupyter notebook
-function strip_svg(ipynb)
+@everywhere function strip_svg(ipynb)
     @info "Stripping SVG in $(ipynb)"
     nb = open(JSON.parse, ipynb, "r")
     for cell in nb["cells"]
