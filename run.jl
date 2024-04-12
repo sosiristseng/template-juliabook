@@ -80,7 +80,7 @@ function list_notebooks(basedir, cachedir)
     return (;ipynbs, litnbs)
 end
 
-function run_literate(file, cachedir; rmsvg=true)
+@everywhere function run_literate(file, cachedir; rmsvg=true)
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
     ipynb = Literate.notebook(file, outpath; mdstrings=true, execute=true)
