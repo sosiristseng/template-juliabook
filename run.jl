@@ -9,13 +9,30 @@ using IJulia
     Pkg.activate(Base.current_project())
 end
 
-function main(; basedir=get(ENV, "DOCDIR", "docs"), cachedir=get(ENV, "NBCACHE", ".cache"), printtable=true)
-    ipynbs = String[]
-    litnbs = String[]
+# Strip SVG output from a Jupyter notebook
+function strip_svg(ipynb)
+    @info "Stripping SVG in $(ipynb)"
+    nb = open(JSON.parse, ipynb, "r")
+    for cell in nb["cells"]
+        !haskey(cell, "outputs") && continue
+        for output in cell["outputs"]
+            !haskey(output, "data") && continue
+            datadict = output["data"]
+            if haskey(datadict, "image/png") || haskey(datadict, "image/jpeg")
+                delete!(datadict, "text/html")
+                delete!(datadict, "image/svg+xml")
+            end
+        end
+    end
+    rm(ipynb)
+    open(ipynb, "w") do io
+        JSON.print(io, nb, 1)
+    end
+    return ipynb
+end
 
-    mkpath(cachedir)
-
-    # Remove cached notebook and sha files if there is no corresponding notebook
+# Remove cached notebook and sha files if there is no corresponding notebook
+function clean_cache(cachedir)
     for (root, dirs, files) in walkdir(cachedir)
         for file in files
             if endswith(file, ".ipynb") || endswith(file, ".sha")
@@ -30,8 +47,12 @@ function main(; basedir=get(ENV, "DOCDIR", "docs"), cachedir=get(ENV, "NBCACHE",
             end
         end
     end
+end
 
-    # Collect the list of notebooks
+function list_notebooks(basedir, cachedir)
+    ipynbs = String[]
+    litnbs = String[]
+
     for (root, dirs, files) in walkdir(basedir)
         for file in files
             if endswith(file, ".ipynb") || endswith(file, ".jl")
@@ -42,7 +63,7 @@ function main(; basedir=get(ENV, "DOCDIR", "docs"), cachedir=get(ENV, "NBCACHE",
                 # Cache hit
                 if isfile(shafilename) && read(shafilename, String) == shaval
                     @info "Notebook $(nb) cache hits and will not be executed."
-                # Cache miss
+                    # Cache miss
                 else
                     @info "Notebook $(nb) cache misses. Writing hash to $(shafilename)."
                     mkpath(dirname(shafilename))
@@ -56,11 +77,31 @@ function main(; basedir=get(ENV, "DOCDIR", "docs"), cachedir=get(ENV, "NBCACHE",
             end
         end
     end
+    return (;ipynbs, litnbs)
+end
+
+function run_literate(file, cachedir; rmsvg=true)
+    outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
+    mkpath(outpath)
+    ipynb = Literate.notebook(file, outpath; mdstrings=true, execute=true)
+    rmsvg && strip_svg(ipynb)
+    return ipynb
+end
+
+function main(;
+    basedir=get(ENV, "DOCDIR", "docs"),
+    cachedir=get(ENV, "NBCACHE", ".cache"), printtable=true,
+    rmsvg=true
+    )
+
+    mkpath(cachedir)
+    clean_cache(cachedir)
+
+    (;ipynbs, litnbs) = list_notebooks(basedir, cachedir)
 
     # Execute literate notebooks in worker process(es)
     ts_lit = pmap(litnbs; on_error=ex -> NaN) do nb
-        outdir = joinpath(cachedir, dirname(nb))
-        @elapsed Literate.notebook(nb, outdir; mdstrings=true)
+        @elapsed run_literate(nb, cachedir; rmsvg)
     end
 
     # Remove worker processes to release some memory
@@ -72,7 +113,7 @@ function main(; basedir=get(ENV, "DOCDIR", "docs"), cachedir=get(ENV, "NBCACHE",
             println("Debugging notebook: ", nb)
             try
                 withenv("JULIA_DEBUG" => "Literate") do
-                    Literate.notebook(nb, dirname(nb); mdstrings=true)
+                    run_literate(nb, cachedir; rmsvg)
                 end
             catch e
                 println(e)
