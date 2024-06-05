@@ -5,11 +5,8 @@ Click `Use this template` button to copy this repository.
 See also:
 
 - [template-juliabook-matrix](https://github.com/ww-jl/template-juliabook-matrix) : Dynamic parallel matrix runs notebooks concurrently and [jupyter-book][] builds the website.
-
-[quarto]: https://quarto.org
+-
 [jupyter-book]: https://jupyterbook.org
-[Literate.jl]: https://github.com/fredrikekre/Literate.jl
-[mkdocs-material]: https://squidfunk.github.io/mkdocs-material
 
 ## Notebook execution and publish via continuous integration (CI)
 
@@ -21,11 +18,11 @@ Open your repository settings => Pages => GitHub Pages => Build and deployment =
 
 ## Automatic dependency updates
 
-###  Dependabot and Kodiak Bot
+### Renovate and Kodiak Bot
 
-See [dependabot.yml](.github/dependabot.yml) configuration.
+See [renovate.json](.github/renovate.json) for [Renovate Bot](https://docs.renovatebot.com/) configuration.
 
-This repository also uses [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge updates. You might need to enable the Kodiak Bot APP.
+This repository also uses [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge updates.
 
 ### Julia dependencies
 
