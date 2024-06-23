@@ -48,7 +48,7 @@ jobs:
         echo "PYTHON=${VIRTUAL_ENV}/bin/python" >> $GITHUB_ENV
         echo "JULIA_PYTHONCALL_EXE=${VIRTUAL_ENV}/bin/python">> $GITHUB_ENV
     - name: Cache executed notebooks
-      uses: actions/cache@0v4
+      uses: actions/cache@v4
       id: cache-nb
       with:
         path: ${{ env.NBCACHE }}
