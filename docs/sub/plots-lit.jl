@@ -4,7 +4,6 @@
 Using Literate.jl
 ===#
 using Plots
-pythonplot()
 using Random
 Random.seed!(2022)
 
