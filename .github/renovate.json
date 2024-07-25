@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-      "config:best-practices"
+      "config:recommended"
   ],
   "packageRules": [
       {
@@ -14,7 +14,7 @@
     "automerge": true
   },
   "git-submodules": {
-    "enabled": true
+    "enabled": true,
   },
   "platformAutomerge": true,
   "automergeStrategy": "squash"
