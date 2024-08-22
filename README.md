@@ -18,11 +18,9 @@ Open your repository settings => Pages => GitHub Pages => Build and deployment =
 
 ## Automatic dependency updates
 
-### Renovate and Kodiak Bot
+### Kodiak Bot
 
-See [renovate.json](.github/renovate.json) for [Renovate Bot](https://docs.renovatebot.com/) configuration.
-
-This repository also uses [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge updates.
+This repository uses dependabot and [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge updates.
 
 ### Julia dependencies
 
