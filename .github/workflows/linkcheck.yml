@@ -61,3 +61,5 @@ jobs:
         run: uv pip install -r requirements.txt
       - name: Build website
         run: jupyter-book build ${DIR} --builder linkcheck
+      - name: Minimize uv cache
+        run: uv cache prune --ci
