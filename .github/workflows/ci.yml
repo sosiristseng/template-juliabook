@@ -19,7 +19,6 @@ env:
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CI: 'true'
   NBCACHE: '.cache'
-  UV_CACHE_DIR: /tmp/.uv-cache
   UV_SYSTEM_PYTHON: 1
 
 jobs:
@@ -35,14 +34,6 @@ jobs:
         python-version: '3.x'
     - name: Install uv
       run: curl -LsSf https://astral.sh/uv/install.sh | sh
-    - name: uv cache
-      uses: actions/cache@v4
-      if: ${{ contains(runner.name, 'GitHub Actions') }}
-      with:
-        path: /tmp/.uv-cache
-        key: uv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-        restore-keys: |
-          uv-${{ runner.os }}-
     - name: Install Python dependencies
       run: uv pip install -r requirements.txt
     - name: Cache executed notebooks
@@ -98,8 +89,6 @@ jobs:
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Build website
       run: jupyter-book build docs/
-    - name: Minimize uv cache
-      run: uv cache prune --ci
     - name: Upload pages artifact
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: actions/upload-pages-artifact@v3
