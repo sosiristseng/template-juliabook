@@ -19,6 +19,8 @@ env:
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CI: 'true'
   NBCACHE: '.cache'
+  UV_CACHE_DIR: /tmp/.uv-cache
+  UV_SYSTEM_PYTHON: 1
 
 jobs:
   CI:
@@ -31,22 +33,18 @@ jobs:
       id: setup-python
       with:
         python-version: '3.x'
-    - name: Cache python venv
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+    - name: uv cache
       uses: actions/cache@v4
       if: ${{ contains(runner.name, 'GitHub Actions') }}
-      id: cache-venv
       with:
-        key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
-        path: .venv
+        path: /tmp/.uv-cache
+        key: uv-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          uv-${{ runner.os }}-
     - name: Install Python dependencies
-      run: |
-        python -m venv .venv
-        source .venv/bin/activate
-        python -m pip install -r requirements.txt
-        echo "${VIRTUAL_ENV}/bin" >> $GITHUB_PATH
-        echo "VIRTUAL_ENV=${VIRTUAL_ENV}" >> $GITHUB_ENV
-        echo "PYTHON=${VIRTUAL_ENV}/bin/python" >> $GITHUB_ENV
-        echo "JULIA_PYTHONCALL_EXE=${VIRTUAL_ENV}/bin/python">> $GITHUB_ENV
+      run: uv pip install -r requirements.txt
     - name: Cache executed notebooks
       uses: actions/cache@v4
       id: cache-nb
@@ -100,6 +98,8 @@ jobs:
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Build website
       run: jupyter-book build docs/
+    - name: Minimize uv cache
+      run: uv cache prune --ci
     - name: Upload pages artifact
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: actions/upload-pages-artifact@v3
