@@ -20,7 +20,7 @@ Open your repository settings => Pages => GitHub Pages => Build and deployment =
 
 ### Kodiak Bot
 
-This repository uses dependabot and [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge updates.
+This repository uses dependabot and [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge updates. You need to enable the [Kodiak Bot](https://kodiakhq.com/docs/quickstart) APP to automatically merge updates.
 
 ### Julia dependencies
 
