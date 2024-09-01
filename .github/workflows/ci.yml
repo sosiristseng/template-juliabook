@@ -64,7 +64,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-${{ steps.read_toml.outputs.value }}-
     - name: Install Julia packages
-      if: ${{ !contains(runner.name, 'GitHub Actions') || steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
       shell: julia --color=yes {0}
       run: |
         using Pkg, Dates
