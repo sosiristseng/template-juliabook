@@ -56,12 +56,10 @@ jobs:
         version: ${{ steps.read_toml.outputs.value }}
     - name: Restore Julia packages
       uses: actions/cache/restore@v4
-      if: ${{ contains(runner.name, 'GitHub Actions') }}
+      if: ${{ runner.environment == 'github-hosted' }}
       id: cache-julia
       with:
-        path: |
-          ~/.julia
-          !~/.julia/registries
+        path: ~/.julia
         key: ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-${{ steps.read_toml.outputs.value }}-${{ hashFiles('src/**', 'Project.toml', 'Manifest.toml') }}
         restore-keys: |
           ${{ runner.os }}-julia-${{ env.CACHE_NUM }}-${{ steps.read_toml.outputs.value }}-
@@ -74,14 +72,11 @@ jobs:
         Pkg.activate(".")
         Pkg.instantiate()
         Pkg.precompile()
-        Pkg.gc(collect_delay=Day(0))
     - name: Save Julia packages
       uses: actions/cache/save@v4
-      if: ${{ contains(runner.name, 'GitHub Actions') && steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
       with:
-        path: |
-          ~/.julia
-          !~/.julia/registries
+        path: ~/.julia
         key: ${{ steps.cache-julia.outputs.cache-primary-key }}
     - name: Run notebooks
       run: julia --color=yes -p ${{ env.LITERATE_PROC }} --heap-size-hint=3G run.jl
