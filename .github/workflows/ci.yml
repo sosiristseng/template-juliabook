@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NBCONVERT_JOBS: '4'
-  LITERATE_PROC: '4'
+  NBCONVERT_JOBS: '3'
+  LITERATE_PROC: '3'
   ALLOWERRORS: 'false'
   CACHE_NUM: '1'
   JULIA_CONDAPKG_BACKEND: 'Null'
@@ -61,7 +61,7 @@ jobs:
         version: ${{ steps.read_toml.outputs.value }}
     - name: Restore Julia packages
       uses: actions/cache/restore@v4
-      if: ${{ runner.environment == 'github-hosted' }}
+      if: ${{ runner.environment == 'github-hosted'}}
       id: cache-julia
       with:
         path: ~/.julia
