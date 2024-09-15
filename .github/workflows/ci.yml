@@ -50,10 +50,12 @@ jobs:
       uses: actions/cache@v4
       id: cache-nb
       with:
-        path: ${{ env.NBCACHE }}
-        key: ${{ steps.hash.outputs.ver }}-${{ steps.hash.outputs.value }}-${{ hashFiles('docs/**/*.ipynb', 'docs/**/*.jl') }}
+        path: |
+          ${{ env.NBCACHE }}/**/*.ipynb
+          ${{ env.NBCACHE }}/**/*.sha
+        key: notebook-${{ steps.hash.outputs.value }}-${{ hashFiles('docs/**/*.ipynb', 'docs/**/*.jl') }}
         restore-keys: |
-          ${{ steps.hash.outputs.ver }}-${{ steps.hash.outputs.value }}-
+          notebook-${{ steps.hash.outputs.value }}-
     - name: Setup Julia
       uses: julia-actions/setup-julia@v2
       with:
