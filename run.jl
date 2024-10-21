@@ -122,7 +122,7 @@ function main(;
 
     if length(ipynbs) > 0
         # Install IJulia kernel
-        IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=6G")
+        IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=4G")
 
         # nbconvert command array
         ntasks = parse(Int, get(ENV, "NBCONVERT_JOBS", "1"))
