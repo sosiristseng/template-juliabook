@@ -17,6 +17,8 @@ env:
   JULIA_NUM_THREADS: '2'
   ALLOWERRORS: 'false'
   NBCACHE: '.cache'
+  JULIA_CONDAPKG_BACKEND: 'Null'
+  JULIA_CI: 'true'
 
 jobs:
   CI:
@@ -69,8 +71,6 @@ jobs:
       shell: julia --color=yes {0}
       env:
         JUPYTER: 'jupyter'
-        JULIA_CONDAPKG_BACKEND: 'Null'
-        JULIA_CI: 'true'
       run: |
         using Pkg
         Pkg.add(["IJulia", "Literate", "Tables", "MarkdownTables", "JSON"])
