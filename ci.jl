@@ -24,10 +24,7 @@ end
             end
         end
     end
-    rm(ipynb)
-    open(ipynb, "w") do io
-        JSON.print(io, nb, 1)
-    end
+    write(ipynb, JSON.json(nb, 1))
     return ipynb
 end
 
