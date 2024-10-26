@@ -53,12 +53,11 @@ jobs:
           notebook-${{ steps.hash.outputs.value }}-
     - name: Setup Julia
       uses: julia-actions/setup-julia@v2
-      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       with:
         version: ${{ steps.read_toml.outputs.value }}
     - name: Restore Julia packages
       uses: actions/cache/restore@v4
-      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && runner.environment == 'github-hosted'}}
+      if: ${{ runner.environment == 'github-hosted' }}
       id: cache-julia
       with:
         path: ~/.julia
@@ -66,7 +65,7 @@ jobs:
         restore-keys: |
           ${{ steps.hash.outputs.ver }}-
     - name: Install Julia packages
-      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
       shell: julia --color=yes {0}
       env:
         JUPYTER: 'jupyter'
@@ -79,14 +78,14 @@ jobs:
         Pkg.instantiate()
         Pkg.precompile()
     - name: Clean Julia package directory
-      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
       shell: julia --color=yes {0}
       run: |
         using Pkg, Dates
         Pkg.gc(collect_delay=Day(0))
     - name: Save Julia packages
       uses: actions/cache/save@v4
-      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
       with:
         path: ~/.julia
         key: ${{ steps.cache-julia.outputs.cache-primary-key }}
