@@ -5,7 +5,7 @@ Click `Use this template` button to copy this repository.
 See also:
 
 - [template-juliabook-matrix](https://github.com/ww-jl/template-juliabook-matrix) : Dynamic parallel matrix runs notebooks concurrently and [jupyter-book][] builds the website.
--
+
 [jupyter-book]: https://jupyterbook.org
 
 ## Notebook execution and publish via continuous integration (CI)
