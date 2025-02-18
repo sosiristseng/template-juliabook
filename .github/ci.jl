@@ -2,7 +2,6 @@ using Distributed
 using Tables
 using MarkdownTables
 using SHA
-using IJulia
 
 @everywhere begin
     ENV["GKSwstype"] = "100"
@@ -121,6 +120,8 @@ function main(;
     end
 
     if !isempty(ipynbs)
+        Pkg.add("IJulia")
+        @eval using IJulia
         # Install IJulia kernel
         IJulia.installkernel("Julia", "--project=@.", "--heap-size-hint=4G")
 
