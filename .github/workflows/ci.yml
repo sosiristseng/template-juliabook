@@ -98,7 +98,7 @@ jobs:
     - name: Build website
       run: jupyter-book build docs/
     - name: Copy environment to website
-      run: cp Manifest.toml Project.toml requirements.txt ./docs/_build/html/_sources
+      run: cp Manifest.toml Project.toml requirements.txt ./docs/_build/html
     - name: Deploy pages
       uses: peaceiris/actions-gh-pages@v4
       if: ${{ github.ref == 'refs/heads/main' }}
