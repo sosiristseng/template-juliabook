@@ -54,20 +54,21 @@ function list_notebooks(basedir, cachedir)
 
     for (root, dirs, files) in walkdir(basedir)
         for file in files
-            if endswith(file, ".ipynb") || endswith(file, ".jl")
+            name, ext = splitext(file)
+            if ext == ".ipynb" || ext == ".jl"
                 nb = joinpath(root, file)
-                shaval = read(nb, String) |> sha256 |> bytes2hex
-                @info "Notebook $(nb): hash=$(shaval)"
-                shafilename = joinpath(cachedir, root, splitext(file)[1] * ".sha")
+                shaval = read(nb, String) |> sha1 |> bytes2hex
+                @info "$(nb) SHA1 = $(shaval)"
+                shafilename = joinpath(cachedir, root, name * ".sha")
                 if isfile(shafilename) && read(shafilename, String) == shaval
-                    @info "Notebook $(nb) cache hits and will not be executed."
+                    @info "$(nb) cache hits and will not be executed."
                 else
-                    @info "Notebook $(nb) cache misses. Writing hash to $(shafilename)."
+                    @info "$(nb) cache misses. Writing hash to $(shafilename)."
                     mkpath(dirname(shafilename))
                     write(shafilename, shaval)
-                    if endswith(file, ".ipynb")
+                    if ext == ".ipynb"
                         push!(ipynbs, nb)
-                    elseif endswith(file, ".jl")
+                    elseif ext == ".jl"
                         push!(litnbs, nb)
                     end
                 end
