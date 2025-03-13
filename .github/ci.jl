@@ -9,7 +9,7 @@ using IJulia
     using Literate, Pkg, JSON
 end
 
-# Strip SVG output from a Jupyter notebook
+"Strip SVG output from a Jupyter notebook"
 @everywhere function strip_svg(nbpath)
     oldfilesize = filesize(nbpath)
     nb = open(JSON.parse, nbpath, "r")
@@ -25,11 +25,11 @@ end
         end
     end
     write(nbpath, JSON.json(nb, 1))
-    @info "Stripped SVG in $(nbpath). The original size is $(oldfilesize). The new size is $(filesize(ipynb))."
+    @info "Stripped SVG in $(nbpath). The original size is $(oldfilesize). The new size is $(filesize(nbpath))."
     return nbpath
 end
 
-# Remove cached notebook and sha files if there is no corresponding notebook
+"Remove cached notebook and sha files if there is no corresponding notebook"
 function clean_cache(cachedir)
     for (root, _, files) in walkdir(cachedir)
         for file in files
@@ -80,7 +80,7 @@ function list_notebooks(basedir, cachedir)
     return (; ipynbs, litnbs)
 end
 
-# Run a Literate.jl notebook
+"Run a Literate.jl notebook"
 @everywhere function run_literate(file, cachedir; rmsvg=true)
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
