@@ -41,8 +41,8 @@ function clean_cache(cachedir)
                 if !isfile(nb) && !isfile(lit)
                     cachepath = joinpath(root, fn)
                     @info "Notebook $(nb) or $(lit) not found. Removing $(cachepath) SHA and notebook."
-                    rm(fullfn * ".sha")
-                    rm(fullfn * ".ipynb"; force=true)
+                    rm(cachepath * ".sha")
+                    rm(cachepath * ".ipynb"; force=true)
                 end
             end
         end
