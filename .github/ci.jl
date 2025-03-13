@@ -9,7 +9,7 @@ using SHA
     using Literate, Pkg, JSON
 end
 
-"Strip SVG output from a Jupyter notebook"
+# Strip SVG output from a Jupyter notebook
 @everywhere function strip_svg(nbpath)
     oldfilesize = filesize(nbpath)
     nb = open(JSON.parse, nbpath, "r")
@@ -110,7 +110,7 @@ function list_notebooks(basedir, cachedir)
     return litnbs
 end
 
-"Run a Literate.jl notebook"
+# Run a Literate.jl notebook
 @everywhere function run_literate(file, cachedir; rmsvg=true)
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
