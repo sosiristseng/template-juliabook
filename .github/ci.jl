@@ -10,9 +10,9 @@ using IJulia
 end
 
 # Strip SVG output from a Jupyter notebook
-@everywhere function strip_svg(ipynb)
-    oldfilesize = filesize(ipynb)
-    nb = open(JSON.parse, ipynb, "r")
+@everywhere function strip_svg(nbpath)
+    oldfilesize = filesize(nbpath)
+    nb = open(JSON.parse, nbpath, "r")
     for cell in nb["cells"]
         !haskey(cell, "outputs") && continue
         for output in cell["outputs"]
@@ -24,23 +24,25 @@ end
             end
         end
     end
-    write(ipynb, JSON.json(nb, 1))
-    @info "Stripped SVG in $(ipynb). The original size is $(oldfilesize). The new size is $(filesize(ipynb))."
-    return ipynb
+    write(nbpath, JSON.json(nb, 1))
+    @info "Stripped SVG in $(nbpath). The original size is $(oldfilesize). The new size is $(filesize(ipynb))."
+    return nbpath
 end
 
 # Remove cached notebook and sha files if there is no corresponding notebook
 function clean_cache(cachedir)
-    for (root, dirs, files) in walkdir(cachedir)
+    for (root, _, files) in walkdir(cachedir)
         for file in files
-            if endswith(file, ".ipynb") || endswith(file, ".sha")
-                fn = joinpath(joinpath(splitpath(root)[2:end]), splitext(file)[1])
-                nb = fn * ".ipynb"
-                lit = fn * ".jl"
+            fn, ext = splitext(file)
+            if ext == ".sha"
+                target = joinpath(joinpath(splitpath(root)[2:end]), fn)
+                nb = target * ".ipynb"
+                lit = target * ".jl"
                 if !isfile(nb) && !isfile(lit)
-                    fullfn = joinpath(root, file)
-                    @info "Notebook $(nb) or $(lit) not found. Removing $(fullfn)."
-                    rm(fullfn)
+                    cachepath = joinpath(root, fn)
+                    @info "Notebook $(nb) or $(lit) not found. Removing $(cachepath) SHA and notebook."
+                    rm(fullfn * ".sha")
+                    rm(fullfn * ".ipynb"; force=true)
                 end
             end
         end
