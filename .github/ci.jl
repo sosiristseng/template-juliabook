@@ -1,6 +1,5 @@
 using Distributed
 using Tables
-using Markdown
 using MarkdownTables
 using SHA
 
@@ -63,8 +62,8 @@ function to_literate(nbpath; shell_or_help = r"^\s*[;?]")
                 print(io, separator, "#---\n", s)  # Literate code block mark
                 separator = "\n\n"
             elseif cell["cell_type"] == "markdown"
-                md = Markdown.parse(join(cell["source"]))
-                print(io, separator, "# ", replace(repr("text/plain", md), '\n' => "\n# "))
+                txt = join(cell["source"])
+                print(io, separator, "#===\n", txt, "\n===#")
                 separator = "\n\n"
             end
         end
