@@ -1,0 +1,10 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: index
+chapters:
+  - file: pythonplot-lit
+  - file: pythonplot
+  - file: sub/pythonplot-lit
+  - file: sub/pythonplot
