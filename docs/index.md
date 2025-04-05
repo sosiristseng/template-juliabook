@@ -1,38 +1,23 @@
 # Welcome to your Jupyter Book
 
-This is a small sample book to give you a feel for how book content is
-structured.
+See also:
 
-:::{note}
-Here is a note!
-:::
+- https://github.com/sosiristseng/template-juliabook-matrix : Using the dynamic parallel matrix runs notebooks concurrently and then `jupyter-book` builds the website.
 
-And here is a code block:
+## Enable GitHub pages
 
-```
-e = mc^2
-```
+From your repository settings => Pages => GitHub Pages => Build and deployment => Source, select `GitHub actions`.
 
-Check out the content pages bundled with this sample book to see more.
+## Automatic dependency updates
 
-## Adding a citation
+This repository uses [Dependabot](https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide) and [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge Python and GitHub actions updates.
 
-You can also cite references that are stored in a `bibtex` file. For example,
-the following syntax: `` {cite}`holdgraf_evidence_2014` `` will render like
-this: {cite}`holdgraf_evidence_2014`.
+### Julia dependencies
 
-Moreover, you can insert a bibliography into your page with this syntax:
-The `{bibliography}` directive must be used for all the `{cite}` roles to
-render properly.
-For example, if the references for your book are stored in `references.bib`,
-then the bibliography is inserted with:
+This repository will regularly update Julia in the `Manifest.toml`, make a PR with the updated packages, and automatically merge the updates if the notebooks are executed without any problem.
 
-````
-```{bibliography}
-```
-````
+See [the instructions](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs) for how to trigger CI workflows in a PR. This repo uses a custom [GitHub APP](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) to generate a token on the fly.
 
-Resulting in a rendered bibliography that looks like:
+## Checking web links
 
-```{bibliography}
-```
+This repository  uses GitHub actions to regularly check if the web links in the notebooks are valid.

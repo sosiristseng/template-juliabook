@@ -6,5 +6,5 @@ root: index
 chapters:
   - file: pythonplot-lit
   - file: pythonplot
-  - file: sub/pythonplot-lit
-  - file: sub/pythonplot
+  - file: sub/plots-lit
+  - file: sub/plots
