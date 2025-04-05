@@ -102,7 +102,7 @@ end
     write(shafilename, shaval)
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
-    @time "Running $(file)" ipynb = Literate.notebook(file, outpath; mdstrings=true, execute=true)
+    @time "$(file) took" ipynb = Literate.notebook(file, outpath; mdstrings=true, execute=true)
     return rmsvg ? strip_svg(ipynb) : ipynb
 end
 
