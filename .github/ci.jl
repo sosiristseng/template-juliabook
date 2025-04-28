@@ -88,7 +88,7 @@ function list_notebooks(basedir)
 end
 
 # Run a Literate notebook
-@everywhere function run_literate(file, cachedir; rmsvg=true)
+@everywhere function run_literate(file, cachedir)
     shaval = read(file, String) |> sha256 |> bytes2hex
     @info "$(file) SHA256 = $(shaval)"
     shafilename = joinpath(cachedir, splitext(file)[1] * ".sha")
@@ -103,7 +103,7 @@ end
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
     @time "$(file) took" ipynb = Literate.notebook(file, outpath; mdstrings=true, execute=true)
-    return rmsvg ? strip_svg(ipynb) : ipynb
+    return ipynb
 end
 
 function main(;
@@ -116,14 +116,15 @@ function main(;
     litnbs = list_notebooks(basedir)
 
     # Execute literate notebooks in worker process(es)
-    ts_lit = pmap(litnbs; on_error=ex -> NaN) do nb
-        @elapsed run_literate(nb, cachedir; rmsvg)
+    success = pmap(litnbs; on_error=ex -> false) do nb
+        ipynb = run_literate(nb, cachedir)
+        rmsvg && strip_svg(ipynb)
+        true
     end
-    # Remove worker processes to release some memory
-    rmprocs(workers())
+
     # Debug notebooks one by one if there are errors
-    for (nb, t) in zip(litnbs, ts_lit)
-        if isnan(t)
+    for (nb, ok) in zip(litnbs, success)
+        if !ok
             println("Debugging notebook: ", nb)
             try
                 withenv("JULIA_DEBUG" => "Literate") do
@@ -134,7 +135,8 @@ function main(;
             end
         end
     end
-    any(isnan, ts_lit) && error("Please check notebook error(s).")
+
+    !all(success) && error("Please check notebook error(s).")
 end
 
 # Run code
