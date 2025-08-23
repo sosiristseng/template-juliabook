@@ -18,6 +18,7 @@ env:
   ALLOWERRORS: 'false'
   NBCACHE: '.cache'
   JULIA_CONDAPKG_BACKEND: 'Null'
+  JULIA_CONDAPKG_OFFLINE: 'true'
   JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
 
@@ -41,7 +42,7 @@ jobs:
       run: uv pip install -r requirements.txt
     - name: Read Julia version
       id: julia-version
-      run: python -c 'import tomllib; from pathlib import Path; print("resolved=", tomllib.loads(Path("Manifest.toml").read_text())["julia_version"])' >> "$GITHUB_OUTPUT"
+      run: python -c 'import tomllib; from pathlib import Path; print("resolved=", tomllib.loads(Path("Manifest.toml").read_text())["julia_version"], sep="")' >> "$GITHUB_OUTPUT"
     - name: Get environment hash
       id: hash
       run: |
@@ -75,7 +76,7 @@ jobs:
       shell: julia --color=yes {0}
       run: |
         using Pkg
-        Pkg.add(["Literate", "Tables", "MarkdownTables", "JSON", "IJulia"])
+        Pkg.add(["Literate", "Tables", "MarkdownTables", "JSON", "SHA"])
         Pkg.activate(".")
         Pkg.instantiate()
         Pkg.precompile()
