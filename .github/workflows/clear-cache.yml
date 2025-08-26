@@ -1,4 +1,4 @@
-name: Clear caches
+name: Clear cache
 on:
   workflow_dispatch:
   pull_request:
