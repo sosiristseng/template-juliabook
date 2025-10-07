@@ -20,12 +20,13 @@ end
             end
         end
     end
+    rm(nbpath; force=true)
     write(nbpath, JSON.json(nb, 1))
     @info "Stripped SVG in $(nbpath). The original size is $(oldfilesize). The new size is $(filesize(nbpath))."
     return nbpath
 end
 
-"Remove cached notebook and sha files if there is no corresponding notebook"
+# Remove cached notebook and sha files if there is no corresponding notebook
 function clean_cache(cachedir)
     for (root, _, files) in walkdir(cachedir)
         for file in files
@@ -45,7 +46,7 @@ function clean_cache(cachedir)
     end
 end
 
-"Convert a Jupyter notebook into a Literate notebook. Adapted from https://github.com/JuliaInterop/NBInclude.jl."
+# Convert a Jupyter notebook into a Literate notebook. Adapted from https://github.com/JuliaInterop/NBInclude.jl.
 function to_literate(nbpath; shell_or_help = r"^\s*[;?]")
     nb = open(JSON.parse, nbpath, "r")
     jlpath = splitext(nbpath)[1] * ".jl"
@@ -68,18 +69,18 @@ function to_literate(nbpath; shell_or_help = r"^\s*[;?]")
     return jlpath
 end
 
-"Recursively list Literate notebooks"
+# Recursively list Literate notebooks
 function list_notebooks(basedir)
     litnbs = String[]
     for (root, _, files) in walkdir(basedir)
         for file in files
             nb = joinpath(root, file)
-            name, ext = splitext(file)
+            name, ext = splitext(nb)
             if ext == ".jl"
                 push!(litnbs, nb)
             elseif ext == ".ipynb"
                 lit = to_literate(nb)
-                rm(nb)
+                rm(nb; force=true)
                 push!(litnbs, lit)
             end
         end
