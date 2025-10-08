@@ -110,8 +110,7 @@ end
     mkpath(outpath)
     ipynb = Literate.notebook(file, dirname(file); mdstrings=true, execute=true)
     rmsvg && strip_svg(ipynb)
-    dst = joinpath(abspath(pwd()), cachedir, dirname(ipynb))
-    cp(ipynb, joinpath(dst, basename(ipynb)); force=true)
+    cp(ipynb, joinpath(outpath, basename(ipynb)))
     return ipynb
 end
 
