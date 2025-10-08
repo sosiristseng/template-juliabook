@@ -108,7 +108,7 @@ end
 @everywhere function run_literate(file, cachedir; rmsvg=true)
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
-    ipynb = Literate.notebook(file; mdstrings=true, execute=true)
+    ipynb = Literate.notebook(file, dirname(file); mdstrings=true, execute=true)
     rmsvg && strip_svg(ipynb)
     dst = joinpath(abspath(pwd()), cachedir, dirname(ipynb))
     cp(ipynb, joinpath(dst, basename(ipynb)); force=true)
