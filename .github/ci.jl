@@ -78,7 +78,6 @@ function list_notebooks(basedir, cachedir)
     litnbs = String[]
     for (root, _, files) in walkdir(basedir)
         for file in files
-            nb = joinpath(root, file)
             name, ext = splitext(file)
             if ext == ".ipynb" || ext == ".jl"
                 nb = joinpath(root, file)
