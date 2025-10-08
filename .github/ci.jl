@@ -75,7 +75,7 @@ end
 
 # Recursively lists Jupyter and Literate notebooks. Also processes caching.
 function list_notebooks(basedir, cachedir)
-    litnbs = String[]
+    list = String[]
     for (root, _, files) in walkdir(basedir)
         for file in files
             name, ext = splitext(file)
@@ -93,23 +93,25 @@ function list_notebooks(basedir, cachedir)
                     if ext == ".ipynb"
                         litnb = to_literate(nb)
                         rm(nb; force=true)
-                        push!(litnbs, litnb)
+                        push!(list, litnb)
                     elseif ext == ".jl"
-                        push!(litnbs, nb)
+                        push!(list, nb)
                     end
                 end
             end
         end
     end
-    return litnbs
+    return list
 end
 
 # Run a Literate notebook
 @everywhere function run_literate(file, cachedir; rmsvg=true)
     outpath = joinpath(abspath(pwd()), cachedir, dirname(file))
     mkpath(outpath)
-    ipynb = Literate.notebook(file, outpath; mdstrings=true, execute=true)
+    ipynb = Literate.notebook(file; mdstrings=true, execute=true)
     rmsvg && strip_svg(ipynb)
+    dst = joinpath(abspath(pwd()), cachedir, dirname(ipynb))
+    cp(ipynb, joinpath(dst, basename(ipynb)); force=true)
     return ipynb
 end
 
