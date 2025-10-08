@@ -73,7 +73,7 @@ function to_literate(nbpath; shell_or_help = r"^\s*[;?]")
     return jlpath
 end
 
-# Recursively lists Jupyter and Literate notebooks. Also processes caching.
+# List notebooks without caches in a file tree
 function list_notebooks(basedir, cachedir)
     list = String[]
     for (root, _, files) in walkdir(basedir)
