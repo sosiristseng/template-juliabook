@@ -123,34 +123,47 @@ function main(;
     mkpath(cachedir)
     clean_cache(cachedir)
     litnbs = list_notebooks(basedir, cachedir)
-
-    if !isempty(litnbs)
-        # Execute literate notebooks in worker process(es)
-        ts_lit = pmap(litnbs; on_error=ex -> NaN) do nb
-            @elapsed run_literate(nb, cachedir; rmsvg)
-        end
-        rmprocs(workers()) # Remove worker processes to release some memory
-
-        # Debug notebooks one by one if there are errors
-        for (nb, t) in zip(litnbs, ts_lit)
-            if isnan(t)
-                println("Debugging notebook: ", nb)
-                try
-                    withenv("JULIA_DEBUG" => "Literate") do
-                        run_literate(nb, cachedir; rmsvg)
-                    end
-                catch e
-                    println(e)
-                end
+    ts_lit = []
+    for nb in litnbs
+        t = try
+            withenv("JULIA_DEBUG" => "Literate") do
+              @elapsed run_literate(nb, cachedir; rmsvg)
             end
+        catch e
+            println(e)
+            NaN
         end
-        any(isnan, ts_lit) && error("Please check literate notebook error(s).")
-    else
-        ts_lit = []
+        push!(ts_lit, t)
     end
 
+    any(isnan, ts_lit) && error("Please check literate notebook error(s).")
+    # if !isempty(litnbs)
+    #     # Execute literate notebooks in worker process(es)
+    #     ts_lit = pmap(litnbs; on_error=ex -> NaN) do nb
+    #         @elapsed run_literate(nb, cachedir; rmsvg)
+    #     end
+    #     rmprocs(workers()) # Remove worker processes to release some memory
+
+    #     # Debug notebooks one by one if there are errors
+    #     for (nb, t) in zip(litnbs, ts_lit)
+    #         if isnan(t)
+    #             println("Debugging notebook: ", nb)
+    #             try
+    #                 withenv("JULIA_DEBUG" => "Literate") do
+    #                     run_literate(nb, cachedir; rmsvg)
+    #                 end
+    #             catch e
+    #                 println(e)
+    #             end
+    #         end
+    #     end
+    #     any(isnan, ts_lit) && error("Please check literate notebook error(s).")
+    # else
+    #     ts_lit = []
+    # end
+
     # Print execution result
-    Tables.table([litnbs ts_lit; ipynbs ts_ipynb]; header=["Notebook", "Elapsed (s)"]) |> markdown_table(String) |> print
+    Tables.table([litnbs ts_lit]; header=["Notebook", "Elapsed (s)"]) |> markdown_table(String) |> print
 end
 
 # Run code
