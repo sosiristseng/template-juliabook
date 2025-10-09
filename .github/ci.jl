@@ -2,11 +2,10 @@ using Distributed
 using Tables
 using MarkdownTables
 using SHA
-using JSON
 
 @everywhere begin
     ENV["GKSwstype"] = "100"
-    using Literate
+    using Literate, JSON
 end
 
 # Strip SVG output from a Jupyter notebook
@@ -125,25 +124,21 @@ function main(;
 
     if !isempty(litnbs)
         # Execute literate notebooks in worker process(es)
-        ts_lit = pmap(litnbs) do nb
+        ts_lit = pmap(litnbs; on_error=identity) do nb
             @elapsed run_literate(nb, cachedir; rmsvg)
         end
         rmprocs(workers()) # Remove worker processes to release some memory
-
-        # Debug notebooks one by one if there are errors
+        failed = false
         for (nb, t) in zip(litnbs, ts_lit)
-            if isnan(t)
-                println("Debugging notebook: ", nb)
-                try
-                    withenv("JULIA_DEBUG" => "Literate") do
-                        run_literate(nb, cachedir; rmsvg)
-                    end
-                catch e
-                    println(e)
-                end
+            if t isa ErrorException
+                println("Notebook: ", nb, "failed with error: \n", t.msg)
+                failed = true
             end
         end
-        any(isnan, ts_lit) && error("Please check literate notebook error(s).")
+
+        if failed
+            error("Please check literate notebook error(s).")
+        end
     else
         ts_lit = []
     end
