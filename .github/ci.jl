@@ -144,7 +144,7 @@ function main(;
     end
 
     # Print execution result
-    Tables.table([litnbs ts_lit; ipynbs ts_ipynb]; header=["Notebook", "Elapsed (s)"]) |> markdown_table(String) |> print
+    Tables.table([litnbs ts_lit]; header=["Notebook", "Elapsed (s)"]) |> markdown_table(String) |> print
 end
 
 # Run code
