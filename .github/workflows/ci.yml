@@ -20,7 +20,6 @@ env:
   JULIA_CONDAPKG_OFFLINE: 'true'
   JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
-  PY_VER: "3.13"
 
 jobs:
   CI:
@@ -28,12 +27,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      id: setup-python
+      with:
+        python-version: '3.13'
     - name: Setup uv
       uses: astral-sh/setup-uv@v6
       with:
-        version: "latest"
-        python-version: ${{ env.PY_VER }}
-        activate-environment: true
         enable-cache: true
     - name: Install Python dependencies
       run: uv pip install -r requirements.txt
