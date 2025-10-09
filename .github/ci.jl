@@ -125,7 +125,7 @@ function main(;
 
     if !isempty(litnbs)
         # Execute literate notebooks in worker process(es)
-        ts_lit = pmap(litnbs; on_error=ex -> NaN) do nb
+        ts_lit = pmap(litnbs) do nb
             @elapsed run_literate(nb, cachedir; rmsvg)
         end
         rmprocs(workers()) # Remove worker processes to release some memory
