@@ -1,7 +1,5 @@
 #===
-# Plotting with PythonPlot.jl
-
-Using Literate.jl
+# Literate PythonPlot.jl
 ===#
 import PythonPlot as plt
 using Random

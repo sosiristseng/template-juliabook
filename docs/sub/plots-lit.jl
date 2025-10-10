@@ -1,5 +1,5 @@
 #===
-# Plotting with Plots.jl
+# Literate Plots.jl
 ===#
 using Plots
 using Random
