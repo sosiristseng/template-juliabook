@@ -14,7 +14,6 @@ concurrency:
 env:
   LITERATE_PROC: '2'
   JULIA_NUM_THREADS: '2'
-  ALLOWERRORS: 'false'
   NBCACHE: '.cache'
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CONDAPKG_OFFLINE: 'true'
