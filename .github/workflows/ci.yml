@@ -14,6 +14,8 @@ concurrency:
 env:
   LITERATE_PROC: '2'
   JULIA_NUM_THREADS: '2'
+  JULIA_CONDAPKG_BACKEND: 'Null'
+  JULIA_CONDAPKG_OFFLINE: 'true'
   NBCACHE: '.cache'
   JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
@@ -31,6 +33,10 @@ jobs:
         python-version: '3.13'
     - name: Setup uv
       uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+    - name: Install Python dependencies
+      run: uv pip install -r requirements.txt
     - name: Read Julia version
       id: julia-version
       run: python -c 'import tomllib; from pathlib import Path; print("resolved=", tomllib.loads(Path("Manifest.toml").read_text())["julia_version"], sep="")' >> "$GITHUB_OUTPUT"
