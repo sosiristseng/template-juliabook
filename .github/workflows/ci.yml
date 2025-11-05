@@ -14,6 +14,8 @@ concurrency:
 env:
   LITERATE_PROC: '2'
   JULIA_NUM_THREADS: '2'
+  JULIA_CONDAPKG_BACKEND: 'Null'
+  JULIA_CONDAPKG_OFFLINE: 'true'
   NBCACHE: '.cache'
   JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
@@ -31,6 +33,10 @@ jobs:
         python-version: '3.13'
     - name: Setup uv
       uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+    - name: Install Python dependencies
+      run: uv pip install -r requirements.txt
     - name: Read Julia version
       id: julia-version
       run: python -c 'import tomllib; from pathlib import Path; print("resolved=", tomllib.loads(Path("Manifest.toml").read_text())["julia_version"], sep="")' >> "$GITHUB_OUTPUT"
@@ -88,8 +94,6 @@ jobs:
       run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
-    - name: Install jupyter book
-      run: uv pip install -r requirements-jb.txt
     - name: Build website
       run: jupyter book build --html
     - name: Upload pages artifact
