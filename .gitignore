@@ -118,9 +118,7 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
-/public
+
 
 # mypy
 .mypy_cache/
@@ -162,3 +160,8 @@ LocalPreferences.toml
 
 # MyST build outputs
 _build
+/site
+/public
+
+# VS Code config
+.vscode/

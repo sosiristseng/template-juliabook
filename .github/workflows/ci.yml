@@ -19,6 +19,7 @@ env:
   NBCACHE: '.cache'
   JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
+  BASE_URL: /${{ github.event.repository.name }}
 
 jobs:
   CI:
@@ -94,13 +95,18 @@ jobs:
       run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+    - name: Install Jupyter Book (via myst)
+      run: npm install -g jupyter-book
     - name: Build website
-      run: jupyter book build --html
+      run: jupyter-book build --html
     - name: Upload pages artifact
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: actions/upload-pages-artifact@v4
       with:
-        path: _build/html/
+        path: './_build/html'
 
   # Notebook branch
   notebook:
