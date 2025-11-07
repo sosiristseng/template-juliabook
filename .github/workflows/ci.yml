@@ -12,25 +12,18 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LITERATE_PROC: '2'
-  JULIA_NUM_THREADS: '2'
+  BASE_URL: /${{ github.event.repository.name }}
+  JULIA_CI: 'true'
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CONDAPKG_OFFLINE: 'true'
+  JULIA_NUM_THREADS: '2'
+  LITERATE_PROC: '2'
   NBCACHE: '.cache'
-  JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
-  BASE_URL: /${{ github.event.repository.name }}
 
 jobs:
   CI:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write    # to deploy to Pages
-      id-token: write # to verify the deployment originates from an appropriate source
-      actions: read   # to download an artifact uploaded by `actions/upload-pages-artifact`
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
@@ -101,13 +94,16 @@ jobs:
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
     - name: Copy back built notebooks
-      run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
+      run: |
+        cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
+        rm -rf ${{ env.NBCACHE }}
     - name: Deploy notebooks to another branch
       uses: JamesIves/github-pages-deploy-action@v4
       if: ${{ github.ref == 'refs/heads/main' }}
       with:
         folder: .
         branch: ipynb
+        single-commit: true
         commit-message: ${{ github.event.head_commit.message }}
     - uses: actions/setup-node@v4
       with:
@@ -121,7 +117,22 @@ jobs:
       uses: actions/upload-pages-artifact@v4
       with:
         path: './_build/html'
-    - name: Deploy to GitHub Pages
-      if: ${{ github.ref == 'refs/heads/main' }}
-      id: deployment
-      uses: actions/deploy-pages@v4
+
+  # Deployment job
+  deploy:
+    name: Deploy to GitHub pages
+    needs: CI
+    if: ${{ github.ref == 'refs/heads/main' }}
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write    # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+      actions: read   # to download an artifact uploaded by `actions/upload-pages-artifact`
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
