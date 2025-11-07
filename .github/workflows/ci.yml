@@ -12,14 +12,14 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LITERATE_PROC: '2'
-  JULIA_NUM_THREADS: '2'
+  BASE_URL: /${{ github.event.repository.name }}
+  JULIA_CI: 'true'
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CONDAPKG_OFFLINE: 'true'
+  JULIA_NUM_THREADS: '2'
+  LITERATE_PROC: '2'
   NBCACHE: '.cache'
-  JULIA_CI: 'true'
   UV_SYSTEM_PYTHON: 1
-  BASE_URL: /${{ github.event.repository.name }}
 
 jobs:
   CI:
@@ -94,7 +94,17 @@ jobs:
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
     - name: Copy back built notebooks
-      run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
+      run: |
+        cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
+        rm -rf ${{ env.NBCACHE }}
+    - name: Deploy notebooks to another branch
+      uses: JamesIves/github-pages-deploy-action@v4
+      if: ${{ github.ref == 'refs/heads/main' }}
+      with:
+        folder: .
+        branch: ipynb
+        single-commit: true
+        commit-message: ${{ github.event.head_commit.message }}
     - uses: actions/setup-node@v4
       with:
         node-version: 18.x
@@ -108,43 +118,6 @@ jobs:
       with:
         path: './_build/html'
 
-  # Notebook branch
-  notebook:
-    name: Deploy notebook branch
-    needs: CI
-    if: ${{ github.ref == 'refs/heads/main' }}
-    permissions:
-      contents: write
-      packages: write
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v5
-    - name: Setup Julia
-      uses: julia-actions/setup-julia@v2
-    - name: Convert literate files to Jupyter notebooks
-      shell: julia --color=yes {0}
-      working-directory: docs
-      run: |
-        import Pkg
-        Pkg.add("Literate")
-        using Literate
-        for (root, dirs, files) in walkdir(pwd())
-          for file in files
-            if endswith(file, ".jl")
-              nb = joinpath(root, file)
-              Literate.notebook(nb, dirname(nb); mdstrings=true, execute=false)
-            end
-          end
-        end
-    - name: Deploy pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      if: ${{ github.ref == 'refs/heads/main' }}
-      with:
-        folder: .
-        branch: ipynb
-        commit-message: ${{ github.event.head_commit.message }}
-
   # Deployment job
   deploy:
     name: Deploy to GitHub pages
@@ -154,7 +127,7 @@ jobs:
     permissions:
       pages: write    # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
-      actions: read   # to download an artifact uploaded by `actions/upload-pages-artifact@v3`
+      actions: read   # to download an artifact uploaded by `actions/upload-pages-artifact`
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
