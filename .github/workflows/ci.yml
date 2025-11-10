@@ -102,8 +102,7 @@ jobs:
     - name: Upload Notebooks
       uses: actions/upload-artifact@v5
       with:
-        name: notebooks
-        path: ${{ env.NBCACHE }}
+        path: ${{ env.NBCACHE }}/**/*.ipynb
         include-hidden-files: true
         retention-days: 1
   render:
@@ -114,8 +113,8 @@ jobs:
       uses: actions/checkout@v5
     - name: Download notebooks
       uses: actions/download-artifact@v6
-      with:
-        name: notebooks
+    - name: Show file structure
+      run: ls -R ${{ env.NBCACHE }}
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Setup NodeJS (required by Jupyter Book 2)
