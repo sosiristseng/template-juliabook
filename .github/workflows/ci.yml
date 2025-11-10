@@ -132,10 +132,26 @@ jobs:
       with:
         path: './_build/html'
 
+  # CI conclusion for GitHub status check
+  # Adaped from https://brunoscheufler.com/blog/2022-04-09-the-required-github-status-check-that-wasnt
+  CI:
+    needs: render
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if [[ ${{ needs.render.result }} == "success" ]]; then
+            echo "Tests passed"
+            exit 0
+          else
+            echo "Tests failed"
+            exit 1
+          fi
+
   # Deployment job
   deploy:
     name: Deploy to GitHub pages
-    needs: CI
+    needs: render
     if: ${{ github.ref == 'refs/heads/main' }}
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
