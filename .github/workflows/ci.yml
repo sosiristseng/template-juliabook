@@ -114,7 +114,7 @@ jobs:
     - name: Download notebooks
       uses: actions/download-artifact@v6
     - name: Show file structure
-      run: ls -R ${{ env.NBCACHE }}
+      run: ls -R docs/
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Setup NodeJS (required by Jupyter Book 2)
