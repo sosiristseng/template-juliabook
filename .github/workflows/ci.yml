@@ -99,6 +99,23 @@ jobs:
     - name: Run notebooks
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
+    - name: Upload Notebooks
+      uses: actions/upload-artifact@v5
+      with:
+        name: notebooks
+        path: ${{ env.NBCACHE }}
+        include-hidden-files: true
+        retention-days: 1
+  render:
+    needs: execute
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+    - name: Download notebooks
+      uses: actions/download-artifact@v6
+      with:
+        name: notebooks
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Setup NodeJS (required by Jupyter Book 2)
