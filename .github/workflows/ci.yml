@@ -113,8 +113,8 @@ jobs:
       uses: actions/checkout@v5
     - name: Download notebooks
       uses: actions/download-artifact@v6
-    - name: Show file structure
-      run: ls -R docs/
+      with:
+        path: ${{ env.NBCACHE }}
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Setup NodeJS (required by Jupyter Book 2)
