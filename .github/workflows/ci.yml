@@ -17,7 +17,7 @@ env:
   JULIA_CI: 'true'
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CONDAPKG_OFFLINE: 'true'
-  JULIA_NUM_THREADS: '2'
+  # JULIA_NUM_THREADS: '2'
   LITERATE_PROC: '2'
   NBCACHE: '.cache'
   UV_SYSTEM_PYTHON: 1
@@ -33,12 +33,9 @@ jobs:
       id: setup-python
       with:
         python-version: '3.13'
-    - name: Setup uv
-      uses: astral-sh/setup-uv@v7
-      with:
-        enable-cache: true
+        cache: 'pip'
     - name: Install Python dependencies
-      run: uv pip install -r requirements.txt
+      run: pip install -r requirements.txt
     - name: Read Julia version
       uses: SebRollen/toml-action@v1.2.0
       id: julia-version
