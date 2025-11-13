@@ -99,7 +99,7 @@ jobs:
         retention-days: 1
   render:
     needs: execute
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
     - name: Checkout
       uses: actions/checkout@v5
@@ -128,7 +128,7 @@ jobs:
   CI:
     needs: render
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - run: |
           if [[ ${{ needs.render.result }} == "success" ]]; then
@@ -152,7 +152,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
