@@ -77,9 +77,7 @@ jobs:
         using Pkg
         Pkg.add(["Literate", "JSON", "Tables", "MarkdownTables", "SHA"])
         Pkg.activate(".")
-        Pkg.resolve()
         Pkg.instantiate()
-        Pkg.precompile()
     - name: Clean Julia package directory
       if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
       shell: julia --color=yes {0}
