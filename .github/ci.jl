@@ -50,7 +50,7 @@ function clean_cache(cachedir)
 end
 
 # Convert a Jupyter notebook into a Literate notebook. Adapted from https://github.com/JuliaInterop/NBInclude.jl.
-function to_literate(nbpath; shell_or_help = r"^\s*[;?]")
+function to_literate(nbpath; shell_or_help=r"^\s*[;?]")
     nb = open(JSON.parse, nbpath, "r")
     jlpath = splitext(nbpath)[1] * ".jl"
     open(jlpath, "w") do io
