@@ -76,6 +76,7 @@ jobs:
         Pkg.add(["Literate", "JSON", "Tables", "MarkdownTables", "SHA"])
         Pkg.activate(".")
         Pkg.instantiate()
+        Pkg.precompile()
     - name: Save Julia packages
       uses: actions/cache/save@v4
       if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
@@ -90,6 +91,7 @@ jobs:
       with:
         path: ${{ env.NBCACHE }}/**/*.ipynb
         include-hidden-files: true
+        name: notebooks
         retention-days: 1
   render:
     needs: execute
@@ -100,6 +102,7 @@ jobs:
     - name: Download notebooks
       uses: actions/download-artifact@v6
       with:
+        name: notebooks
         path: ${{ env.NBCACHE }}
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
@@ -154,6 +157,7 @@ jobs:
       - name: Download notebooks
         uses: actions/download-artifact@v6
         with:
+          name: notebooks
           path: ${{ env.NBCACHE }}
       - name: Copy back built notebooks
         run: |
