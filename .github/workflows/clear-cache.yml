@@ -6,7 +6,7 @@ jobs:
   cleanup:
     permissions:
       actions: write
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - name: Cleanup
         run: |
