@@ -42,8 +42,7 @@ jobs:
     - name: Get environment hash
       id: hash
       run: |
-        echo "value=${{ hashFiles('Project.toml', 'Manifest.toml') }}" >> "$GITHUB_OUTPUT"
-        echo "ver=${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}" >> "$GITHUB_OUTPUT"
+        echo "value=${{ hashFiles('Project.toml', 'Manifest.toml', 'src/**') }}" >> "$GITHUB_OUTPUT"
     - name: Cache executed notebooks
       uses: actions/cache@v4
       id: cache-nb
@@ -51,31 +50,35 @@ jobs:
         path: |
           ${{ env.NBCACHE }}/**/*.ipynb
           ${{ env.NBCACHE }}/**/*.sha
-        key: notebook-${{ steps.hash.outputs.value }}-${{ hashFiles('docs/**/*.ipynb', 'docs/**/*.jl') }}
+        key: notebook-${{ steps.hash.outputs.value }}-${{ hashFiles('docs/**') }}
         restore-keys: |
           notebook-${{ steps.hash.outputs.value }}-
     - name: Setup Julia
       uses: julia-actions/setup-julia@v2
       with:
         version: ${{ steps.julia-version.outputs.value }}
+        arch: ${{ runner.arch }}
     - name: Restore Julia packages
       uses: actions/cache/restore@v4
       if: ${{ runner.environment == 'github-hosted' }}
       id: cache-julia
       with:
         path: ~/.julia
-        key: ${{ steps.hash.outputs.ver }}-${{ steps.hash.outputs.value }}
+        key: ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}-${{ steps.hash.outputs.value }}
         restore-keys: |
-          ${{ steps.hash.outputs.ver }}-
+          ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}
     - name: Install Julia packages
       if: ${{ runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
       shell: julia --color=yes {0}
       run: |
-        using Pkg
+        using Pkg, Dates
         Pkg.add(["Literate", "JSON", "Tables", "MarkdownTables", "SHA"])
         Pkg.activate(".")
         Pkg.instantiate()
         Pkg.precompile()
+        if ENV["RUNNER_ENVIRONMENT"] == "github-hosted"
+            Pkg.gc(;collect_delay=Day(0))
+        end
     - name: Save Julia packages
       uses: actions/cache/save@v4
       if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
