@@ -1,4 +1,4 @@
-name: Manually clear cache
+name: Clear all cache
 on:
   workflow_dispatch:
 
@@ -6,20 +6,12 @@ jobs:
   cleanup:
     permissions:
       actions: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Cleanup
         run: |
-          echo "Fetching list of cache keys from ${GITHUB_REF}"
-          cacheKeysForPR=$(gh cache list --ref ${GITHUB_REF} --limit 100 --json id --jq '.[].id')
-
-          ## Setting this to not fail the workflow while deleting cache keys.
-          set +e
           echo "Deleting caches..."
-          for cacheKey in $cacheKeysForPR
-          do
-              gh cache delete $cacheKey
-          done
+          gh cache delete --succeed-on-no-caches --all
           echo "Done"
         env:
           GH_TOKEN: ${{ github.token }}
