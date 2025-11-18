@@ -34,11 +34,8 @@ jobs:
     - name: Install Python dependencies
       run: pip install -r requirements.txt
     - name: Read Julia version
-      uses: SebRollen/toml-action@v1.2.0
       id: julia-version
-      with:
-        file: 'Manifest.toml'
-        field: 'julia_version'
+      run: python -c 'import tomllib; from pathlib import Path; print("value=", tomllib.loads(Path("Manifest.toml").read_text())["julia_version"], sep="")' >> "$GITHUB_OUTPUT"
     - name: Get environment hash
       id: hash
       run: |
@@ -147,7 +144,6 @@ jobs:
     permissions:
       pages: write    # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
-      actions: read   # to download an artifact uploaded by `actions/upload-pages-artifact`
       contents: write
     environment:
       name: github-pages
