@@ -138,13 +138,11 @@ function main(;
 
         if failed
             error("Please check literate notebook error(s).")
+        else
+            # Print execution result
+            Tables.table([litnbs ts_lit]; header=["Notebook", "Elapsed (s)"]) |> markdown_table(String) |> print
         end
-    else
-        ts_lit = []
     end
-
-    # Print execution result
-    Tables.table([litnbs ts_lit]; header=["Notebook", "Elapsed (s)"]) |> markdown_table(String) |> print
 end
 
 # Run code
