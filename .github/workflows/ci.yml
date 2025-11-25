@@ -59,15 +59,16 @@ jobs:
       with:
         version: ${{ steps.julia-version.outputs.value }}
         arch: ${{ runner.arch }}
+        show-versioninfo: 'true'
     - name: Restore Julia packages
       uses: actions/cache/restore@v4
       if: ${{ runner.environment == 'github-hosted' }}
       id: cache-julia
       with:
         path: ~/.julia
-        key: ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}-${{ steps.hash.outputs.value }}
+        key: ${{ steps.hash.outputs.ver }}-${{ steps.hash.outputs.value }}
         restore-keys: |
-          ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}
+          ${{ steps.hash.outputs.ver }}-
     - name: Install Julia packages
       if: ${{ runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
       shell: julia --color=yes {0}
