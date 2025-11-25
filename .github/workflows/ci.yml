@@ -42,7 +42,7 @@ jobs:
     - name: Get environment hash
       id: hash
       run: |
-        echo "ver=${{ runner.os }}-julia-${{ env.JULIA_CPU_TARGET }}-${{ steps.julia-version.outputs.value }}" >> "$GITHUB_OUTPUT"
+        echo "ver=${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}" >> "$GITHUB_OUTPUT"
         echo "value=${{ hashFiles('Project.toml', 'Manifest.toml', 'src/**') }}" >> "$GITHUB_OUTPUT"
     - name: Cache executed notebooks
       uses: actions/cache@v4
