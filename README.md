@@ -2,13 +2,13 @@
 
 > Template for publishing Julia Jupyter / Literate notebooks
 
+Click `Use this template` button to copy this repository.
+
 Publish Julia notebooks using [Jupyter Book](https://jupyterbook.org/stable/).
 - Supports both [Literate](https://github.com/fredrikekre/Literate.jl) (`*.jl`) and Jupyter (`*.ipynb`) notebooks. Jupyter notebooks will be converted to the Literate format before execution.
 - Supports multi-processing (setting `LITERATE_PROC` in `ci.yml`) and runs notebooks in parallel in GitHub actions
 - Automatic dependency updates by dependabot and `update-manifest.yml` GitHub actions.
 - Checks if the links in the notebooks are valid.
-
-Click `Use this template` button to copy this repository.
 
 See also:
 
