@@ -181,6 +181,7 @@ jobs:
           publish_dir: .
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: ipynb
+          force_orphan: true
           commit_message: ${{ github.event.head_commit.message }}
       - name: Deploy to GitHub Pages
         id: deployment
