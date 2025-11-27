@@ -8,7 +8,7 @@ Publish Julia notebooks using [Jupyter Book](https://jupyterbook.org/stable/).
 - Supports both [Literate](https://github.com/fredrikekre/Literate.jl) (`*.jl`) and Jupyter (`*.ipynb`) notebooks. Jupyter notebooks will be converted to the Literate format before execution.
 - Supports multi-processing (setting `LITERATE_PROC` in `ci.yml`) and runs notebooks in parallel in GitHub actions
 - Automatic dependency updates by dependabot and `update-manifest.yml` GitHub actions.
-- Checks if the links in the notebooks are valid.
+- Checks if the links in the notebooks are valid with `lychee`. (See `linkcheck.yml`)
 
 See also:
 
@@ -36,9 +36,3 @@ See `update-manifest.yml`.
 This repository can regularly update Julia in the `Manifest.toml`, make a PR with the updated packages, and automatically merge the updates if the notebooks are executed without any problem.
 
 See [the instructions](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs) for how to trigger CI workflows in a PR. This repo uses my [GitHub APP](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens) to generate a token on the fly.
-
-## Checking web links
-
-See `linkcheck.yml`.
-
-This repository uses `lychee` GitHub actions to regularly check if the web links in the notebooks are valid.
