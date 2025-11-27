@@ -12,8 +12,12 @@ Publish Julia notebooks using [Jupyter Book](https://jupyterbook.org/stable/).
 
 See also:
 
-- https://github.com/sosiristseng/template-juliabook
-- https://github.com/sosiristseng/template-juliabook-matrix : Using the dynamic parallel matrix runs notebooks concurrently and then Jupyter Book builds the website.
+- https://github.com/sosiristseng/template-juliabook : Using  multiprocessing to run Literate notebooks in parallel. Jupyter Book builds the website.
+- https://github.com/sosiristseng/template-juliabook-matrix : Using the dynamic parallel matrix to run Literate notebooks in parallel. Jupyter Book builds the website.
+- https://github.com/sosiristseng/template-quarto-literate : Using multiprocessing to run Literate notebooks in parallel. Quarto builds the website.
+- https://github.com/sosiristseng/template-quarto-julia-matrix : Using the dynamic parallel matrix to run Literate notebooks in parallel. Quarto builds the website.
+- https://github.com/sosiristseng/template-quarto-julia : Using Quarto to run and render Quarto notebooks (`*qmd`).
+
 
 ## You need to enable GitHub pages
 
@@ -21,13 +25,13 @@ From your repository settings => Pages => GitHub Pages => Build and deployment =
 
 ## Automatic dependency updates
 
-With `.kodiak.toml` and `dependabot.yml`.
+See `.kodiak.toml` and `dependabot.yml`.
 
 This repository uses [Dependabot](https://docs.github.com/en/code-security/getting-started/dependabot-quickstart-guide) and [Kodiak Bot](https://kodiakhq.com/docs/quickstart) to automatically merge Python and GitHub actions updates.
 
 ### Julia dependencies
 
-With `update-manifest.yml`.
+See `update-manifest.yml`.
 
 This repository can regularly update Julia in the `Manifest.toml`, make a PR with the updated packages, and automatically merge the updates if the notebooks are executed without any problem.
 
@@ -35,6 +39,6 @@ See [the instructions](https://github.com/peter-evans/create-pull-request/blob/m
 
 ## Checking web links
 
-With `linkcheck.yml`.
+See `linkcheck.yml`.
 
 This repository uses `lychee` GitHub actions to regularly check if the web links in the notebooks are valid.
