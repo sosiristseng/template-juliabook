@@ -140,9 +140,11 @@ jobs:
         id: setup-python
         with:
           python-version: ${{ env.PY_VER }}
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
       - name: Install nbconvert
-        run: pip install nbconvert
-      - name: Find notebooks
+        run: uv pip install --system nbconvert
+      - name: Find notebooks and clear their outputs
         run: find docs/ -type f -name '*.ipynb' | parallel jupyter nbconvert --clear-output --inplace {}
       - name: Deploy notebooks
         uses: peaceiris/actions-gh-pages@v4
