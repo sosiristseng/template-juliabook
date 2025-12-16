@@ -100,12 +100,11 @@ jobs:
   render:
     needs: execute
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout
       uses: actions/checkout@v6
     - name: Download notebooks
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         name: notebooks
         path: ${{ env.NBCACHE }}
