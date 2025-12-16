@@ -7,7 +7,7 @@ project:
   authors: ["Wen-Wei Tseng"]
   license: CC-BY-4.0
   open_access: true
-  github: https://github.com/template-juliabook
+  github: https://github.com/sosiristseng/template-juliabook
   # jupyter:
   #   binder:
   #     ref: ipynb
@@ -22,7 +22,8 @@ project:
 
 site:
   template: book-theme
-  # options:
+  options:
+    folders: true
   #   favicon: favicon.ico
   #   logo: site_logo.png
   nav: []
