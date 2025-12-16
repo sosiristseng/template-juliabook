@@ -91,7 +91,6 @@ jobs:
       run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
     - name: Upload Notebooks
       uses: actions/upload-artifact@v6
-      if: ${{ github.ref == 'refs/heads/main' }}
       with:
         path: ${{ env.NBCACHE }}/**/*.ipynb
         include-hidden-files: true
