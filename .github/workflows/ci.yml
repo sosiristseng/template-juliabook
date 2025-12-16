@@ -153,42 +153,11 @@ jobs:
     permissions:
       pages: write    # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
-      contents: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Download notebooks
-        uses: actions/download-artifact@v7
-        with:
-          name: notebooks
-          path: ${{ env.NBCACHE }}
-      - name: Copy back built notebooks
-        run: |
-          cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
-          rm -rf ${{ env.NBCACHE }}
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        id: setup-python
-        with:
-          python-version: ${{ env.PY_VER }}
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v7
-      - name: Install nbconvert
-        run: uv pip install --system nbconvert
-      - name: Find notebooks and clear their outputs
-        run: find docs/ -type f -name '*.ipynb' | parallel jupyter nbconvert --clear-output --inplace {}
-      - name: Deploy notebooks
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          publish_dir: .
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: ipynb
-          force_orphan: true
-          commit_message: ${{ github.event.head_commit.message }}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
