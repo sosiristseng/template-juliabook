@@ -100,8 +100,7 @@ jobs:
   render:
     needs: execute
     runs-on: ubuntu-latest
-    env:
-      BASE_URL: /${{ github.event.repository.name }}
+
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -122,6 +121,8 @@ jobs:
     - name: Install Python dependencies
       run: uv pip install --system -r requirements.txt
     - name: Build website
+      env:
+        BASE_URL: /${{ github.event.repository.name }}
       run: jupyter-book build --html
     - name: Upload pages artifact
       if: ${{ github.ref == 'refs/heads/main' }}
