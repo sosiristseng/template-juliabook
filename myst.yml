@@ -18,7 +18,9 @@ project:
   toc:
     - file: docs/index.md
     - pattern: docs/*.ipynb
-    - pattern: docs/sub/*.ipynb
+    - title: Sub
+      children:
+        - pattern: docs/sub/*.ipynb
 
 site:
   template: book-theme
