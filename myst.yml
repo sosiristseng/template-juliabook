@@ -23,7 +23,6 @@ site:
   template: book-theme
   options:
     folders: true
-  #   favicon: favicon.ico
-  #   logo: site_logo.png
-  nav:
-    title: Julia Book
+  # favicon: favicon.ico
+  # logo: site_logo.png
+  nav: []
