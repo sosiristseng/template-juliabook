@@ -19,7 +19,7 @@ env:
   JULIA_NUM_THREADS: '2'
   NBCACHE: '.cache'
   LITERATE_PROC: '2'
-  PY_VER: '3.13'
+  PY_VER: '3.14'
 
 jobs:
   CI:
