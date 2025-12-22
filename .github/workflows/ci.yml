@@ -81,7 +81,7 @@ jobs:
         end
     - name: Save Julia packages
       uses: actions/cache/save@v5
-      if: ${{ runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && runner.environment == 'github-hosted' && steps.cache-julia.outputs.cache-hit != 'true' }}
       with:
         path: ~/.julia
         key: ${{ steps.cache-julia.outputs.cache-primary-key }}
