@@ -7,6 +7,7 @@ project:
   authors: ["Wen-Wei Tseng"]
   license: CC-BY-4.0
   open_access: true
+  output_matplotlib_strings: remove
   github: https://github.com/sosiristseng/template-juliabook
   bibliography:
     - docs/references.bib
