@@ -56,12 +56,13 @@ jobs:
           notebook-${{ steps.hash.outputs.value }}-
     - name: Setup Julia
       uses: julia-actions/setup-julia@v2
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       with:
         version: ${{ steps.julia-version.outputs.value }}
         arch: ${{ runner.arch }}
     - name: Restore Julia packages
       uses: actions/cache/restore@v5
-      if: ${{ runner.environment == 'github-hosted' }}
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && runner.environment == 'github-hosted'}}
       id: cache-julia
       with:
         path: ~/.julia
@@ -69,7 +70,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}
     - name: Install Julia packages
-      if: ${{ runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && (runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true') }}
       shell: julia --color=yes --project=@. {0}
       run: |
         using Pkg, Dates
