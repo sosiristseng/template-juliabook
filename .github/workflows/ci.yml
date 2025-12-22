@@ -70,11 +70,9 @@ jobs:
           ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}
     - name: Install Julia packages
       if: ${{ runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true' }}
-      shell: julia --color=yes {0}
+      shell: julia --color=yes --project=@. {0}
       run: |
         using Pkg, Dates
-        Pkg.add(["Literate", "JSON", "Tables", "MarkdownTables", "SHA"])
-        Pkg.activate(".")
         Pkg.instantiate()
         Pkg.precompile()
         if ENV["RUNNER_ENVIRONMENT"] == "github-hosted"
