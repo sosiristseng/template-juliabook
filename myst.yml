@@ -25,7 +25,7 @@ site:
   template: book-theme
   options:
     folders: true
-    logo_text: ""
+    logo_text: "JuliaBook Template"
   # favicon: favicon.ico
   # logo: site_logo.png
   # style: ./my-style.css
