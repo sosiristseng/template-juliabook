@@ -25,6 +25,8 @@ site:
   template: book-theme
   options:
     folders: true
+    logo_text: ""
   # favicon: favicon.ico
   # logo: site_logo.png
+  # style: ./my-style.css
   nav: []
