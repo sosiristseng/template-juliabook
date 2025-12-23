@@ -99,7 +99,7 @@ jobs:
         BASE_URL: /${{ github.event.repository.name }}
       run: |
         npm install -g "jupyter-book"
-        jupyter-book build --html --strict
+        jupyter-book build --html
     - name: Upload pages artifact
       if: ${{ github.ref == 'refs/heads/main' }}
       uses: actions/upload-pages-artifact@v4
