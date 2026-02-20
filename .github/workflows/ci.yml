@@ -129,7 +129,6 @@ jobs:
       with:
         path: './_build/html'
   # CI conclusion for GitHub status check
-  # Adaped from https://brunoscheufler.com/blog/2022-04-09-the-required-github-status-check-that-wasnt
   CI:
     needs: render
     if: always()
