@@ -128,7 +128,21 @@ jobs:
       uses: actions/upload-pages-artifact@v4
       with:
         path: './_build/html'
-
+  # CI conclusion for GitHub status check
+  # Adaped from https://brunoscheufler.com/blog/2022-04-09-the-required-github-status-check-that-wasnt
+  CI:
+    needs: render
+    if: always()
+    runs-on: ubuntu-slim
+    steps:
+      - run: |
+          if [[ ${{ needs.render.result }} == "success" ]]; then
+            echo "Tests passed"
+            exit 0
+          else
+            echo "Tests failed"
+            exit 1
+          fi
   # Deployment job
   deploy:
     name: Deploy to GitHub pages and Notebook branch
