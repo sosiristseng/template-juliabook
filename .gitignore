@@ -118,8 +118,6 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-
-
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -162,6 +160,3 @@ LocalPreferences.toml
 _build
 /site
 /public
-
-# VS Code config
-.vscode/
