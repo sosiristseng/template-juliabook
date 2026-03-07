@@ -1,6 +1,4 @@
-#===
-# Literate Plots.jl
-===#
+# # Literate Plots.jl
 using Plots
 using Random
 Random.seed!(2022)

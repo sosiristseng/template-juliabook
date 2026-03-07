@@ -1,6 +1,4 @@
-#===
-# Literate PythonPlot.jl
-===#
+# # Literate PythonPlot.jl
 import PythonPlot as plt
 using Random
 Random.seed!(2022)
