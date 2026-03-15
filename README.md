@@ -14,9 +14,8 @@ See also:
 
 - https://github.com/sosiristseng/template-juliabook : Using  multiprocessing to run Literate notebooks in parallel. Jupyter Book builds the website.
 - https://github.com/sosiristseng/template-juliabook-matrix : Using the dynamic parallel matrix to run Literate notebooks in parallel. Jupyter Book builds the website.
-- https://github.com/sosiristseng/template-quarto-literate : Using multiprocessing to run Literate notebooks in parallel. Quarto builds the website.
 - https://github.com/sosiristseng/template-quarto-julia-matrix : Using the dynamic parallel matrix to run Literate notebooks in parallel. Quarto builds the website.
-- https://github.com/sosiristseng/template-quarto-julia : Using Quarto to run and render Quarto notebooks (`*qmd`).
+- https://github.com/sosiristseng/template-quarto-julia :  Using multiprocessing to run Literate notebooks in parallel. Quarto builds the website.
 
 
 ## You need to enable GitHub pages
