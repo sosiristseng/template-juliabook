@@ -34,9 +34,7 @@ jobs:
       uses: astral-sh/setup-uv@v7
     - name: Read Julia version
       id: julia-version
-      uses: julia-actions/julia-version@main
-      with:
-        versions: manifest
+      run: python -c 'import tomllib; from pathlib import Path; print("resolved=", tomllib.loads(Path("Manifest.toml").read_text())["julia_version"], sep="")' >> "$GITHUB_OUTPUT"
     - name: Get hashes
       id: hash
       run: |
