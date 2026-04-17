@@ -9,3 +9,8 @@ if ENV["RUNNER_ENVIRONMENT"] == "github-hosted"
     Pkg.gc(;collect_delay=Day(0))
 end
 using Literate
+try
+    using PythonPlot
+catch e
+    @info "PythonPlot not installed. Skipping matplotlib installation."
+end
