@@ -59,13 +59,11 @@ jobs:
       id: cache-julia
     - name: Install Julia packages
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && (runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true') }}
-      run: julia --color=yes .github/setup.jl
+      shell: julia --color=yes --project=@. {o}
+      run: using Pkg; Pkg.instantiate()
     - name: Run notebooks
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
-      env:
-        JULIA_CONDAPKG_OFFLINE: 'true'
-      run: |
-        julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
+      run: julia --project=@. --color=yes -p ${{ env.LITERATE_PROC }} .github/ci.jl
     - name: Copy back built notebooks
       run: cp --verbose -rf ${{ env.NBCACHE }}/docs/* docs/
     - name: Setup NodeJS
