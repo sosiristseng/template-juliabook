@@ -59,7 +59,7 @@ jobs:
       id: cache-julia
     - name: Install Julia packages
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && (runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true') }}
-      shell: julia --color=yes --project=@. {o}
+      shell: julia --color=yes --project=@. {0}
       run: using Pkg; Pkg.instantiate()
     - name: Run notebooks
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
