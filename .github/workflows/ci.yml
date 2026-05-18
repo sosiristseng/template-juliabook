@@ -66,7 +66,7 @@ jobs:
       id: cache-julia
       with:
         path: ~/.julia
-        key: ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}-${{ steps.hash.outputs.value }}
+        key: ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}-${{ steps.hash.outputs.env }}
         restore-keys: |
           ${{ runner.os }}-julia-${{ steps.julia-version.outputs.value }}-
     - name: Install Julia packages
