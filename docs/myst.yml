@@ -2,14 +2,16 @@
 version: 1
 project:
   title: Julia Book
+  github: https://github.com/sosiristseng/template-juliabook
   description: Publish Julia Notebooks via Jupyter Book
   # keywords: []
   authors: ["Wen-Wei Tseng"]
-  license: CC-BY-4.0
+  license:
+    code: MIT
+    content: CC-BY-4.0
   open_access: true
   settings:
     output_matplotlib_strings: remove
-  github: https://github.com/sosiristseng/template-juliabook
   bibliography:
     - references.bib
   # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
@@ -22,6 +24,7 @@ project:
         - pattern: sub/*.ipynb
 
 site:
+  title: JuliaBook Template
   template: book-theme
   options:
     folders: true
