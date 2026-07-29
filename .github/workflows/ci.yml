@@ -15,8 +15,6 @@ env:
   CACHE_NUM: '2'
   LITERATE_PROC: '2'
   JULIA_CI: 'true'
-  # https://github.com/jupyter/docker-stacks/blob/main/images/minimal-notebook/setup-scripts/setup-julia-packages.bash
-  JULIA_CPU_TARGET: 'generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)'
   JULIA_NUM_THREADS: '2'
   OPENBLAS_NUM_THREADS: '1'
   NBCACHE: '.cache'
@@ -43,6 +41,13 @@ jobs:
         echo "jl=${{ runner.os }}-${{ runner.arch }}-julia-${{ steps.julia-version.outputs.resolved }}" >> "$GITHUB_OUTPUT"
         echo "env=${{ env.CACHE_NUM }}-${{ hashFiles('Project.toml', 'Manifest.toml', 'Startup/**') }}" >> "$GITHUB_OUTPUT"
         echo "nb=${{ hashFiles('docs/**/*.jl', 'docs/**/*.ipynb') }}" >> "$GITHUB_OUTPUT"
+    # https://github.com/jupyter/docker-stacks/blob/main/images/minimal-notebook/setup-scripts/setup-julia-packages.bash
+    - name: Set Julia CPU target (x64)
+      if: runner.arch == 'X64'
+      run: echo "JULIA_CPU_TARGET='generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)'" >> $GITHUB_ENV
+    - name: Set Julia CPU target (ARM64)
+      if: runner.arch == 'ARM64'
+      run: echo "JULIA_CPU_TARGET='generic;cortex-a57;thunderx2t99;carmel,clone_all;apple-m1,base(3);neoverse-512tvb,base(3)'" >> $GITHUB_ENV
     - name: Cache executed notebooks
       uses: actions/cache@v6
       id: cache-nb
