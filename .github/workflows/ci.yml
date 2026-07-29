@@ -12,10 +12,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CACHE_NUM: '1'
+  CACHE_NUM: '2'
   LITERATE_PROC: '2'
   JULIA_CI: 'true'
-  JULIA_CPU_TARGET: 'generic;icelake-server,clone_all;znver3,clone_all'
+  # https://github.com/jupyter/docker-stacks/blob/main/images/minimal-notebook/setup-scripts/setup-julia-packages.bash
+  JULIA_CPU_TARGET: 'generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)'
   JULIA_NUM_THREADS: '2'
   OPENBLAS_NUM_THREADS: '1'
   NBCACHE: '.cache'
