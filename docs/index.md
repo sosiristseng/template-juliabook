@@ -5,7 +5,8 @@ This is the front page.
 ```{toctree}
 ---
 maxdepth: 2
-caption: Contents:
+caption: Contents
+:hidden:
 ---
 notebooks/Example 1
 ```
