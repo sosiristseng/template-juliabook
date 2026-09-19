@@ -32,7 +32,7 @@ end
         end
     end
     rm(nbpath; force=true)
-    write(nbpath, JSON.json(nb, 2))
+    write(nbpath, JSON.json(nb, 1))
     @info "$(nbpath) is processed. The original size is $(Base.format_bytes(oldfilesize)). The new size is $(Base.format_bytes(filesize(nbpath)))."
     return nbpath
 end
@@ -80,7 +80,7 @@ function to_literate(nbpath; shell_or_help=r"^\s*[;?]")
     return jlpath
 end
 
-# List notebooks without caches in a file tree
+# List notebooks in a file tree, cache hits will be ignored
 function list_notebooks(basedir, cachedir)
     list = String[]
     for (root, _, files) in walkdir(basedir)
