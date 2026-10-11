@@ -19,6 +19,7 @@ env:
   JULIA_MAX_NUM_PRECOMPILE_FILES: '50'
   OPENBLAS_NUM_THREADS: '1'
   NBCACHE: '.cache'
+  PY_VER: '3.14'
   JULIA_CONDAPKG_BACKEND: 'Null'
   JULIA_CONDAPKG_OFFLINE: 'true'
 
@@ -54,7 +55,7 @@ jobs:
       uses: actions/setup-python@v7
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       with:
-        python-version: '3.x'
+        python-version: ${{ env.PY_VER }}
     - name: Install the latest version of uv
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
