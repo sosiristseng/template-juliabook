@@ -19,7 +19,8 @@ env:
   JULIA_MAX_NUM_PRECOMPILE_FILES: '50'
   OPENBLAS_NUM_THREADS: '1'
   NBCACHE: '.cache'
-  JULIA_CONDAPKG_ENV: '@mpl'
+  JULIA_CONDAPKG_BACKEND: 'Null'
+  JULIA_CONDAPKG_OFFLINE: 'true'
 
 jobs:
   CI:
@@ -49,6 +50,16 @@ jobs:
         key: notebook-${{ steps.hash.outputs.env }}-${{ steps.hash.outputs.nb }}
         restore-keys: |
           notebook-${{ steps.hash.outputs.env }}-
+    - name: Setup Python
+      uses: actions/setup-python@v7
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
+      with:
+        python-version: '3.x'
+    - name: Install the latest version of uv
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
+      uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+    - name: Install Python deps
+      run: uv pip install --system -r requirements.txt
     - name: Setup Julia
       uses: julia-actions/setup-julia@v3
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
