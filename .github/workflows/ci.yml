@@ -59,6 +59,7 @@ jobs:
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
     - name: Install Python deps
+      if: ${{ steps.cache-nb.outputs.cache-hit != 'true' }}
       run: uv pip install --system -r requirements.txt
     - name: Setup Julia
       uses: julia-actions/setup-julia@v3
