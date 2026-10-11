@@ -19,6 +19,7 @@ env:
   JULIA_MAX_NUM_PRECOMPILE_FILES: '50'
   OPENBLAS_NUM_THREADS: '1'
   NBCACHE: '.cache'
+  JULIA_CONDAPKG_ENV: '@mpl'
 
 jobs:
   CI:
@@ -36,7 +37,7 @@ jobs:
         echo "env=${{ env.CACHE_NUM }}-${{ hashFiles('Project.toml', 'Manifest.toml', 'Startup/**') }}" >> "$GITHUB_OUTPUT"
         echo "nb=${{ hashFiles('docs/**/*.jl', 'docs/**/*.ipynb') }}" >> "$GITHUB_OUTPUT"
     - name: Set Julia CPU target (x64)
-      if: ${{ runner.arch == 'X64' }}
+      if: ${{ runner.arch == 'X64' && runner.environment == 'github-hosted' }}
       run: echo 'JULIA_CPU_TARGET=sysimage' >> $GITHUB_ENV
     - name: Cache executed notebooks
       uses: actions/cache@v6
@@ -64,9 +65,12 @@ jobs:
           ${{ steps.hash.outputs.jl }}-
     - name: Install Julia packages
       if: ${{ steps.cache-nb.outputs.cache-hit != 'true' && (runner.environment == 'self-hosted' || steps.cache-julia.outputs.cache-hit != 'true') }}
-      shell: julia --color=yes --project=@. {0}
+      shell: julia --color=yes {0}
       run: |
         using Pkg
+        Pkg.add(["JSON", "Literate", "MarkdownTables", "SHA", "Tables"])
+        Pkg.activate(".")
+        Pkg.resolve()
         Pkg.instantiate()
         Pkg.precompile()
         get(ENV, "RUNNER_ENVIRONMENT", "") == "github-hosted" && Pkg.gc()
