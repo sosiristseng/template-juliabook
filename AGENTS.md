@@ -8,7 +8,7 @@ library to ship — the deliverable is executed notebooks plus the built site. T
 
 No test/lint/typecheck suite. Full local verification:
 
-1. `julia --project=@. -p 4 .github/ci.jl` — runs only notebooks whose content changed
+1. `julia --project=@. -p $(nproc) .github/ci.jl` — runs only notebooks whose content changed
 2. `cd docs && jupyter-book build --html` — output in `docs/_build/html`
 
 ## Notebook workflow
